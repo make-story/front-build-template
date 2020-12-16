@@ -1,7 +1,7 @@
 // 모듈
 const path = require('path'); 
 const webpackMerge = require('webpack-merge'); // 여러 웹팩 설정값 결합 - webpackMerge({설정1}, {설정2}, ...)
-const paths = require(path.resolve(__dirname, './paths'));
+const paths = require(path.resolve(__dirname, './config/paths'));
 const env = require(path.resolve(paths.appPath, 'config/env'));
 const manifestWrite = require(path.resolve(paths.appPath, 'config/manifest-write'));
 
