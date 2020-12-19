@@ -172,8 +172,11 @@ module.exports = {
 					//ignorePartials: true,
 					//ignoreHelpers: true,
 					//partialDirs: [],
-					//helperDirs: [path.resolve(__dirname, "../src/helper")], // handlebars 기본 제공 헬퍼 외 사용자가 등록한 추가 헬퍼들이 있는 경로 (기본적으로 handlebars-loader 는 .handlebars 템플릿이 있는 경로에서 템플릿에서 사용된 .js 헬퍼 파일을 검색한다.)
-					/*partialResolver: function(partial, callback){
+					helperDirs: [
+						// handlebars 기본 제공 헬퍼 외 사용자가 등록한 추가 헬퍼들이 있는 경로 (기본적으로 handlebars-loader 는 .handlebars 템플릿이 있는 경로에서 템플릿에서 사용된 .js 헬퍼 파일을 검색한다.)
+						path.resolve(__dirname, "../src/helper")
+					], 
+					/*partialResolver: function(partial, callback) {
 						console.log('partialResolver');
 						console.log('partial', partial);
 						console.log('callback', callback);
