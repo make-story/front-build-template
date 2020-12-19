@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# 젠킨스를 통한 node.js 서버 재시작 쉘스크립트
+# $ sh shell/server.sh <Git브랜치> <프론트리소스 빌드 젠킨스번호>
 # $ sh shell/server.sh $GIT_BRANCH $BUILD
 # $ sh shell/server.sh master 빌드번호
 

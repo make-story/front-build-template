@@ -1,5 +1,6 @@
 #!/bin/bash
- 
+
+# 젠킨스를 통한 프론트리소스 빌드 쉘스크립트
 # $ sh shell/build.sh $GIT_BRANCH $BUILD_NUMBER
 # $ sh shell/build.sh master build
 

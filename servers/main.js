@@ -11,8 +11,8 @@ const env = require(path.resolve(paths.appPath, 'config/env'));
 const app = express(); 
 
 // view engine setup
-app.set('views', path.resolve(__dirname, '../')); // views 디렉토리 설정 - response.render('경로') 사용
 app.set('view engine', 'ejs'); // view 엔진 설정 - index.ejs 등 확장자 - http://ejs.co/
+app.set('views', path.resolve(__dirname, '../pages')); // views 디렉토리 설정 - response.render('경로') 사용
 
 // express 미들웨어 설정
 app.use(cors()); // cors 관련 정책
@@ -22,7 +22,7 @@ app.use(cookieParser());
 
 // 고정 경로 설정 (JS, CSS, Images, Files 등 폴더 연결)
 //app.use('/dist', express.static(path.resolve(__dirname, '../dist')));
-app.use('/test', express.static(path.resolve(paths.appPath, 'test')));
+app.use(express.static(path.resolve(paths.appPath, 'test')));
 app.use(express.static(path.resolve(paths.appPath, 'dist')));
 app.use(express.static(path.resolve(paths.appPath, 'public')));
 
@@ -59,5 +59,5 @@ app.use((request, response, next) => {
 
 // server listen
 const server = app.listen(env.port, () => {
-	console.log('Express listening on port ' + env.port);
+	console.log(`Server ${env.port}`);
 });

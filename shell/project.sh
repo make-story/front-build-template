@@ -1,7 +1,11 @@
 #!/bin/bash
 
+# 젠킨스를 통한 GIT 버전관리 프로젝트 생성 쉘스크립트
+# $ project.sh <프로젝트명>
 ROOT_PATH="/Users/sung-minyu/Development/github/webpagetest.git/shell"
 PROJECT_NAME=$1
+
+cd $ROOT_PATH;
 if [ -n "$PROJECT_NAME" ] && [ ! -d "$PROJECT_NAME" ] && [ ! -d "$PROJECT_NAME".test ] && [ ! -d "$PROJECT_NAME".git ]; 
     then
     # 서비스 폴더 생성 (non-bare Storage)

@@ -35,6 +35,7 @@ const TerserPlugin = require('terser-webpack-plugin'); // 자바스크립트 코
 //const DirectoryNamedWebpackPlugin = require("directory-named-webpack-plugin"); // 웹팩 4 전용
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // 웹팩4 부터는 extract-text-webpack-plugin 을 CSS에 사용해서는 안됩니다. 대신 mini-css-extract-plugin을 사용
 //const NpmInstallPlugin = require('npm-install-webpack-plugin'); // 개발 중 누락 된 종속성 자동 설치
+//const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 // 날짜
 let getDatetime = () => {
@@ -75,6 +76,7 @@ module.exports = {
 		'test': ['@babel/polyfill', 'eventsource-polyfill', 'src/javascript/entry.js'],
 		//'module2': 'src/javascript/module2.js',
 		//'circular': 'src/javascript/index.js', // 순환 종속 테스트 
+		'entry': 'src/javascript/entry.js',
 	},
 
 	// 경로나 확장자를 처리할 수 있게 도와주는 옵션
@@ -111,16 +113,19 @@ module.exports = {
 		symlinks: false,
 
 		//
-		/*plugins: [
-			new DirectoryNamedWebpackPlugin({
+		plugins: [
+			/*new DirectoryNamedWebpackPlugin({
 				exclude: /node_modules/,
 				include: [
 					path.resolve(__dirname, '../ec-static-common/src/js/'),
 					path.resolve(__dirname, '../ec-static-component/src/js/'),
 					path.resolve(__dirname, '../ec-display-cjmall-frontweb/src/js/')
 				]
-			})
-		],*/
+			}),*/
+			/*new TsconfigPathsPlugin({ 
+				configFile: path.resolve(paths.appPath, 'tsconfig.json') 
+			}),*/
+		],
 	},
 
 	// 모듈처리 방법 (로더 등)
@@ -167,7 +172,7 @@ module.exports = {
 					//ignorePartials: true,
 					//ignoreHelpers: true,
 					//partialDirs: [],
-					helperDirs: [path.resolve(__dirname, "../src/helper")], // handlebars 기본 제공 헬퍼 외 사용자가 등록한 추가 헬퍼들이 있는 경로 (기본적으로 handlebars-loader 는 .handlebars 템플릿이 있는 경로에서 템플릿에서 사용된 .js 헬퍼 파일을 검색한다.)
+					//helperDirs: [path.resolve(__dirname, "../src/helper")], // handlebars 기본 제공 헬퍼 외 사용자가 등록한 추가 헬퍼들이 있는 경로 (기본적으로 handlebars-loader 는 .handlebars 템플릿이 있는 경로에서 템플릿에서 사용된 .js 헬퍼 파일을 검색한다.)
 					/*partialResolver: function(partial, callback){
 						console.log('partialResolver');
 						console.log('partial', partial);
@@ -193,7 +198,11 @@ module.exports = {
 				exclude: /node_modules/, // 제외
 				use: {
 					loader: "ejs-loader", // npm install --save ejs-loader ejs-webpack-loader
-					options: {}
+					options: {
+						//variable: 'data',
+						//interpolate : '\\{\\{(.+?)\\}\\}',
+						//evaluate : '\\[\\[(.+?)\\]\\]'
+					},
 				}
 			},
 			// 자바스크립트 관련 (트랜스파일러 등)
@@ -203,8 +212,8 @@ module.exports = {
 				//include: path.join(__dirname), // 대상
 				exclude: /node_modules/, // 제외
 				use: {
-					// .babelrc 바벨 기본설정파일 확인필요
-					loader: 'babel-loader',  // npm install --save-dev @babel/core babel-loader @babel/preset-react @babel/preset-env 
+					// .babelrc 있다면 해당 파일을 먼저 참조 하며, 없을 경우 webpack options 에 부여한 presets plugins 을 참조
+					loader: 'babel-loader',  // npm install --save-dev babel-loader @babel/core @babel/preset-env 
 					options: {
 						// presets
 						// @babel/preset-env를 설정하여, babel에서 미리 정의해둔 환경으로 ES6에서 ES5로 변환
@@ -214,28 +223,36 @@ module.exports = {
 						//presets: ['@babel/preset-env'] 
 						"presets": [
 							[
-								"@babel/preset-env", {
+								"@babel/preset-env", 
+								//"@babel/preset-typescript",
+								{
 									// async / await 사용때문에 크롬버전 지정
 									"targets": {"chrome": "55"}, // chrome 55 이상으로 지정 
 									"debug": true
-								}
+								},
 							]
 						],
 
 						// plugins 
-						// 다이나믹 import (System.import 는 더이상 사용되지 않습니다.)
-						// import 방식이 require.ensure보다 더 좋습니다. (import 방식은 catch 를 활용해 에러가 났을 때 대처)
-						//plugins: ['@babel/plugin-syntax-dynamic-import'], // npm i -D @babel/plugin-syntax-dynamic-import
+						plugins: [
+							'@babel/plugin-syntax-dynamic-import', // 다이나믹 import (System.import 는 더이상 사용되지 않습니다.) - import 방식이 require.ensure보다 더 좋습니다. (import 방식은 catch 를 활용해 에러가 났을 때 대처)
+							'@babel/plugin-proposal-class-properties', // class property 관련된 문제를 해결
+							'@babel/plugin-proposal-object-rest-spread' // … 변수 spread 과 관련된 문제
+						], 
 					}
 				}
 			},
 			// Typescript
+			// https://github.com/TypeStrong/ts-loader
 			{
-				test: /\.(ts|tsx)$/,
+				test: /\.(ts|tsx)$/, // TypeScript 를 사용 할때는 .ts (리액트 컴포넌트의 경우에는 .tsx) 확장자를 사용
 				exclude: /node_modules/,
 				use: [
 					{
 						loader: 'ts-loader',
+						options: {
+							transpileOnly: true
+						}
 					},
 				],
 			},
@@ -463,11 +480,6 @@ module.exports = {
 			// initial : 초기 로딩에 필요한 경우 (동적 번들, 비동기적 모듈은 별도 번들 최적화)
 			// async : import() 를 이용해 다이나믹하게 사용되는 경우에 분리 (동적 모듈만 번들 최적화)
 			chunks: 'all',
-			
-			// 청크로 분리할 때 이름으로 사용될 파일명
-			//name: false,
-			name: true,
-			//name: 'vendor',
 
 			// 그룹단위 청크 설정
 			cacheGroups: {
