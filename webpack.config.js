@@ -97,35 +97,38 @@ let setOutput = (config={}) => {
 
 // 필수 플러그인 관련 설정 
 let setPlugins = (config={}) => {
-	config = webpackMerge(config, {
-	//config = merge(config, {
-		plugins: [
-			// 순환 improt 검사
-			// 순환 종속성에 대한 일반적인 수정은 다른 모듈에 필요한 변수를 내 보낸 후 파일 끝에 가져 오기를 두는 것
-			/*
-			// A.js
-			module.exports = { foo: 'bar' };
-			require('B'); // at this point A.exports is not empty anymore
-			// B.js
-			var A = require('A');
-			A.foo === 'bar';
-			*/
-			new CircularDependencyPlugin({
-				// exclude detection of files based on a RegExp
-				//exclude: /\.js|node_modules/,
-				// include specific files based on a RegExp
-				//include: /dir/,
-				// add errors to webpack instead of warnings
-				//failOnError: true,
-				// allow import cycles that include an asyncronous import,
-				// e.g. via import(/* webpackMode: "weak" */ './file.js')
-				//allowAsyncCycles: false,
-				// set the current working directory for displaying module paths
-				//cwd: process.cwd(),
-			}),
-			
-			// 빌드 결과 정보가 들어있는 json 생성
-			/*new WebpackAssetsManifest({
+	const plugins = [];
+
+	// 순환 improt 검사
+	// 순환 종속성에 대한 일반적인 수정은 다른 모듈에 필요한 변수를 내 보낸 후 파일 끝에 가져 오기를 두는 것
+	/*
+	// A.js
+	module.exports = { foo: 'bar' };
+	require('B'); // at this point A.exports is not empty anymore
+	// B.js
+	var A = require('A');
+	A.foo === 'bar';
+	*/
+	plugins.push(
+		new CircularDependencyPlugin({
+			// exclude detection of files based on a RegExp
+			//exclude: /\.js|node_modules/,
+			// include specific files based on a RegExp
+			//include: /dir/,
+			// add errors to webpack instead of warnings
+			//failOnError: true,
+			// allow import cycles that include an asyncronous import,
+			// e.g. via import(/* webpackMode: "weak" */ './file.js')
+			//allowAsyncCycles: false,
+			// set the current working directory for displaying module paths
+			//cwd: process.cwd(),
+		})
+	);
+
+	if(config.mode !== 'development') {
+		// 빌드 결과 정보가 들어있는 json 생성
+		/*plugins.push(
+			new WebpackAssetsManifest({
 				//publicPath: '',
 				merge: true, // true/false/customize
 				// entrypoints 매니페스트 파일에 포함 
@@ -175,9 +178,11 @@ let setPlugins = (config={}) => {
 				// afterOptions: function(options) {
 				// 	// console.log('afterOptions');
 				// },
-			}),*/
-			new ManifestPlugin({
-			//new WebpackManifestPlugin({
+			})
+		);*/
+		plugins.push(
+			//new ManifestPlugin({
+			new WebpackManifestPlugin({
 				// 파일명 - manifest.json
 				//fileName: `${env.active}.${env.build}.json`, 
 				// 경로의 기본 경로 (기본값: output.publicPath)
@@ -287,9 +292,12 @@ let setPlugins = (config={}) => {
 					//console.log('[webpack] manifest', manifest);
 					return JSON.stringify(manifest, null, 2); // 매니페스트 파일에 쓰기 
 				}
-			}),
-		]
-	});
+			})
+		)
+	}
+
+	//config = webpackMerge(config, { plugins, });
+	config = merge(config, { plugins, });
 	return config;
 };
 
@@ -315,7 +323,7 @@ process.noDeprecation = true; // 콘설에 다음과 같은 형태의 경고 'pa
 module.exports = (environment, argv) => {
 	let mode;
 	let project;
-	let config = {};
+	let config = {}; // webpack config (json)
 
 	console.log('---------- ---------- webpack config start ---------- ----------');
 	/*
