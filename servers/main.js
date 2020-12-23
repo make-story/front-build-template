@@ -21,7 +21,9 @@ app.use(express.urlencoded({ extended: true })) // for parsing application/x-www
 app.use(cookieParser());
 
 // 고정 경로 설정 (JS, CSS, Images, Files 등 폴더 연결)
-//app.use('/dist', express.static(path.resolve(__dirname, '../dist')));
+// app.use(express.static('../경로'))) 했을 경우, $ yarn server 을 실행시키는 명령은 root 이므로, root 기준 상대경로가 설정됨
+// app.use(express.static(path.resolve(__dirname, '../경로')))
+// app.use('/dist', express.static(path.resolve(__dirname, '../dist')));
 app.use(express.static(path.resolve(paths.appPath, 'test')));
 app.use(express.static(path.resolve(paths.appPath, 'dist')));
 app.use(express.static(path.resolve(paths.appPath, 'public')));
