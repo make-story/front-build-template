@@ -76,6 +76,7 @@ module.exports = {
 		'test': ['@babel/polyfill', 'eventsource-polyfill', 'src/javascript/entry.js'],
 		//'module2': 'src/javascript/module2.js',
 		//'circular': 'src/javascript/index.js', // 순환 종속 테스트 
+		//'index': ['src/typescript/index.ts', 'src/scss/index.scss', 'src/css/style.css',],
 		'entry': 'src/javascript/entry.js',
 	},
 
