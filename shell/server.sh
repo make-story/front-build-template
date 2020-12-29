@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # 젠킨스를 통한 node.js 서버 재시작 쉘스크립트
-# $ sh shell/server.sh <Git브랜치> <프론트리소스 빌드 젠킨스번호>
+# $ sh shell/server.sh <Git 브랜치명> <젠킨스 프론트리소스 빌드 번호>
 # $ sh shell/server.sh $GIT_BRANCH $BUILD
-# $ sh shell/server.sh master 빌드번호
+# $ sh shell/server.sh 'master' '빌드번호'
 
 #SHELL_PATH=`pwd -P`
 SHELL_PATH="/Users/sung-minyu/Development/github"
@@ -13,7 +13,7 @@ if [ -n "$1" ];
     then
 
     # "env"
-    export BUILD_NUMBER=$2
+    export BUILD_NUMBER=$2 # '/빌드번호/빌드결과' 경로로 서버 실행
     if [ "develop" == "$1" ] || [ "origin/develop" == "$1" ];
         then
         SHELL_PATH=$SHELL_PATH/webpagetest.test
