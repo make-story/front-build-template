@@ -35,6 +35,20 @@ app.use(express.static(path.resolve(paths.appPath, 'public')));
 	next();
 });*/
 
+// redirect HTTP to HTTPS 
+/*app.all('*', (request, response, next) => { 
+	let protocol = request.headers['x-forwarded-proto'] || request.protocol; 
+	if(protocol == 'https') { 
+		next(); 
+	}else { 
+		let from = `${protocol}://${request.hostname}${request.url}`; 
+		let to = `https://'${request.hostname}${request.url}`; 
+		// log and redirect 
+		console.log(`[${request.method}]: ${from} -> ${to}`); 
+		response.redirect(to); 
+	} 
+});*/
+
 // routes - app.use('라우트', '하위 라우트')
 //app.use('/api/summary', require(path.resolve(paths.appPath, 'routes/summary')));
 //app.use('/api/request', require(path.resolve(paths.appPath, 'routes/request')));
@@ -59,7 +73,25 @@ app.use((request, response, next) => {
 	//response.render('error');
 });*/
 
-// server listen
-const server = app.listen(env.port, () => {
+// 서버 실행
+/*const server = app.listen(env.port, () => {
 	console.log(`Server ${env.port}`);
+});*/
+//app.listen(env.port, () => console.log(`app is working at http://localhost:${env.port}`));
+const httpServer = http.createServer(app);
+httpServer.listen(env.port, () => {
+	console.log('Server', env.port);
 });
+/*if(fs.existsSync(path.resolve(__dirname, '../.key/ssl.json'))) {
+	const ssl = require(path.resolve(__dirname, '../.key/ssl.json'));
+	if(ssl && typeof ssl === 'object' && fs.existsSync(ssl.pathKey) && fs.existsSync(ssl.pathCert)) {
+		const credentials = {
+			key: fs.readFileSync(ssl.pathKey), // 키 파일의 경로
+			cert: fs.readFileSync(ssl.pathCert), // 인증서 파일의 경로
+		};
+		const httpsServer = https.createServer(credentials, app);
+		httpsServer.listen(env.portSSL, () => {
+			console.log('Server SSL', env.portSSL);
+		});
+	}
+}*/
