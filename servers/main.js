@@ -52,6 +52,9 @@ app.use(express.static(path.resolve(paths.appPath, 'public')));
 });*/
 
 // routes - app.use('라우트', '하위 라우트')
+app.get('/', (request, response) => {
+	response.end('TEST SERVER');
+});
 //app.use('/api/summary', require(path.resolve(paths.appPath, 'routes/summary')));
 //app.use('/api/request', require(path.resolve(paths.appPath, 'routes/request')));
 //app.use('/api/timing', require(path.resolve(paths.appPath, 'routes/timing')));
