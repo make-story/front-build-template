@@ -181,8 +181,8 @@ let setPlugins = (config={}) => {
 			})
 		);*/
 		plugins.push(
-			//new ManifestPlugin({
-			new WebpackManifestPlugin({
+			new ManifestPlugin({
+			//new WebpackManifestPlugin({
 				// 파일명 - manifest.json
 				//fileName: `${env.active}.${env.build}.json`, 
 				// 경로의 기본 경로 (기본값: output.publicPath)
@@ -296,8 +296,8 @@ let setPlugins = (config={}) => {
 		)
 	}
 
-	//config = webpackMerge(config, { plugins, });
-	config = merge(config, { plugins, });
+	config = webpackMerge(config, { plugins, });
+	//config = merge(config, { plugins, });
 	return config;
 };
 

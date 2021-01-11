@@ -25,6 +25,7 @@ if [ -n "$1" ] && [ -n "$2" ];
 		echo "Git 브랜치 조건확인이 필요합니다."
 		exit;
 	fi
+	cd $PROJECT_PATH;
 
 	# "build"
 	$PROJECT_PATH/node_modules/.bin/webpack --config $PROJECT_PATH/webpack.config.js --mode production
