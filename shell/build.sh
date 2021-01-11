@@ -3,7 +3,7 @@
 # 젠킨스를 통한 프론트리소스 빌드 쉘스크립트
 # $ sh shell/build.sh <Git 브랜치명> <젠킨스 프론트리소스 빌드 번호>
 # $ sh shell/build.sh $GIT_BRANCH $BUILD_NUMBER
-# $ sh shell/server.sh 'master' '빌드번호'
+# $ sh shell/build.sh 'master' '빌드번호'
 
 #SHELL_PATH=`pwd -P`
 PROJECT_PATH="/usr/src/project"
