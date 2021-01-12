@@ -1,4 +1,7 @@
-# Front Build 환경  
+# Front 작업 환경  
+### `타입스크립트` `젠킨스 Build/Restart` 대응
+
+-----
 
 > 프론트 리소스 빌드과정  
 webpack 빌드 -> 빌드결과(경로, 파일명 등 정보) JSON 생성 -> 리소스 정보 JSON 읽어서 태그생성  
