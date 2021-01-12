@@ -7,6 +7,9 @@ eslint: ESLint 코어
 eslint-config-airbnb: Airbnb의 eslint 스타일 가이드
 eslint-plugin-import: ES2015+의 import/export 구문을 지원
 
+ESLimt + Typescript
+$ npm i -D @typescript-eslint/eslint-plugin @typescript-eslint/parser
+
 $ eslint --init
 .eslintrc.js 파일 생성됨
 
@@ -27,7 +30,7 @@ module.exports = {
 	// 코드 포맷을 prettier로 설정
 	plugins: ["prettier"],
 	// ESLint가 무시할 디렉토리, 파일을 설정
-	ignorePatterns: ["node_modules/"],
+	ignorePatterns: ["dist/", "node_modules/"],
 	// 확장(extends): 다른 ESLint 설정을 확장해서 사용할때 설정한다.
 	extends: ['eslint:recommended', 'plugin:prettier/recommended'],
 	// 파서 옵션(parserOptions): ESLint 사용을 위해 지원하려는 Javascript 언어 옵션을 설정할 수 있다.
