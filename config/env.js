@@ -5,15 +5,19 @@ process.env
 process.argv
 */
 
-// 빌드 공통 정보 
+// 개발환경 (상수)
 const PHASE_LOCAL = 'local'; // 개발환경: 로컬
 const PHASE_TEST = 'test'; // 개발환경: QA(test)
 const PHASE_STAGE = 'stage'; // 개발환경: STG
 const PHASE_PRODUCTION = 'production'; // 개발환경: PRD
 
-const PROJECT = process.env.PROJECT || ''; // react 등 프로젝트 지정 빌드 
+// react 등 프로젝트 지정하여 빌드할 경우
+const PROJECT = process.env.PROJECT || '';
+// 실행환경 (로컬, QA테스트, 운영 등 구분) 
 const ACTIVE = [PHASE_LOCAL, PHASE_TEST, PHASE_STAGE, PHASE_PRODUCTION].includes(process.env.ACTIVE) && process.env.ACTIVE || PHASE_LOCAL; // PHASE(회사에서의 변수), local/test/stage/production spring.profiles.active(스프링 환경에서 사용하는 변수, -Dspring.profiles.active=local)
-const BUILD = process.env.BUILD_NUMBER || 'build'; // 젠킨스 빌드 번호 
+// 프론트 리소스 적용할 빌드 번호 (프론트 리소스 빌드 당시의 젠킨스 빌드번호)
+const BUILD = process.env.BUILD_NUMBER || 'build'; // shell/server.sh 참고
+// 실행환경별 적용할 서버 포트
 const PORT = (() => {
 	return {
 		[PHASE_LOCAL]: 3001,
