@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# Git 커밋될 때 실행되는 Hook
+# 파일이 위치해야 할 곳 : <Git 저장소 폴더>/hooks/post-receive 
+
+# git checkout [<options>] <branch>
+#  -f, --force           force checkout (throw away local modifications)
+
+#echo "post-receive running..."
+#cd ../webpagetest || exit
+#echo "move complete"
+#unset GIT_DIR
+#echo "unset complete"
+#git pull origin master
+#echo "post-receive pull complete"
+
+PROJECT_NAME="webpagetest"
+
+# 후크는 <oldrev> <newrev> <refname> 형식으로 stdin에서 인수를 가져옵니다. 
+while read oldrev newrev refname
+# while read oldrev newrev ref
+do
+  #BRANCH='echo $ref | cut -d/ -f3'
+  BRANCH=$(git rev-parse --symbolic --abbrev-ref $refname)
+  echo $BRANCH
+  if [ "master" == "$BRANCH" ]; then
+    GIT_WORK_TREE=/home/front/$PROJECT_NAME git checkout -f $BRANCH
+    chmod -R 775 /home/front/$PROJECT_NAME
+    echo "changes pushed to $BRANCH -> $PROJECT_NAME"
+  fi
+
+  if [ "develop" == "$BRANCH" ]; then
+    GIT_WORK_TREE=/home/front/$PROJECT_NAME.test git checkout -f $BRANCH
+    chmod -R 775 /home/front/$PROJECT_NAME.test
+    echo "changes pushed to $BRANCH -> $PROJECT_NAME"
+  fi
+done
