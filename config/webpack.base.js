@@ -30,6 +30,7 @@ const paths = require('./paths');
 const env = require(path.resolve(paths.appPath, 'config/env'));
 
 // webpack plugin 
+//const ESLintPlugin = require('eslint-webpack-plugin'); // 기존 'eslint-loader' 방식 변경
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // 폴더 내부 파일 비우기
 const TerserPlugin = require('terser-webpack-plugin'); // 자바스크립트 코드 압축  (웹팩4+ production 모드는 terser-webpack-plugin를 기본 minimizer로 사용)
 //const DirectoryNamedWebpackPlugin = require("directory-named-webpack-plugin"); // 웹팩 4 전용
@@ -215,36 +216,44 @@ module.exports = {
 				//test: /\.(js|mjs|jsx|ts|tsx)$/,
 				//include: path.join(__dirname), // 대상
 				exclude: /node_modules/, // 제외
-				use: {
-					// .babelrc 있다면 해당 파일을 먼저 참조 하며, 없을 경우 webpack options 에 부여한 presets plugins 을 참조
-					loader: 'babel-loader',  // npm install --save-dev babel-loader @babel/core @babel/preset-env 
-					options: {
-						// presets
-						// @babel/preset-env를 설정하여, babel에서 미리 정의해둔 환경으로 ES6에서 ES5로 변환
-						// @babel/preset-env은 함께 사용되어야 하는 Babel 플러그인을 모아 둔 것으로 Babel 프리셋이라고 부른다. 
-						// Babel이 제공하는 공식 Babel 프리셋(Official Preset) : @babel/preset-env, @babel/preset-flow, @babel/preset-react, @babel/preset-typescript
-						// @babel/preset-env도 공식 프리셋의 하나이며 필요한 플러그인 들을 프로젝트 지원 환경에 맞춰서 동적으로 결정해 준다.
-						//presets: ['@babel/preset-env'] 
-						"presets": [
-							[
-								"@babel/preset-env", 
-								//"@babel/preset-typescript",
-								{
-									// async / await 사용때문에 크롬버전 지정
-									"targets": {"chrome": "55"}, // chrome 55 이상으로 지정 
-									"debug": true
-								},
-							]
-						],
+				use: [
+					{
+						// .babelrc 있다면 해당 파일을 먼저 참조 하며, 없을 경우 webpack options 에 부여한 presets plugins 을 참조
+						loader: 'babel-loader',  // npm install --save-dev babel-loader @babel/core @babel/preset-env 
+						options: {
+							// presets
+							// @babel/preset-env를 설정하여, babel에서 미리 정의해둔 환경으로 ES6에서 ES5로 변환
+							// @babel/preset-env은 함께 사용되어야 하는 Babel 플러그인을 모아 둔 것으로 Babel 프리셋이라고 부른다. 
+							// Babel이 제공하는 공식 Babel 프리셋(Official Preset) : @babel/preset-env, @babel/preset-flow, @babel/preset-react, @babel/preset-typescript
+							// @babel/preset-env도 공식 프리셋의 하나이며 필요한 플러그인 들을 프로젝트 지원 환경에 맞춰서 동적으로 결정해 준다.
+							//presets: ['@babel/preset-env'] 
+							"presets": [
+								[
+									"@babel/preset-env", 
+									//"@babel/preset-typescript",
+									{
+										// async / await 사용때문에 크롬버전 지정
+										"targets": {"chrome": "55"}, // chrome 55 이상으로 지정 
+										"debug": true
+									},
+								]
+							],
 
-						// plugins 
-						plugins: [
-							'@babel/plugin-syntax-dynamic-import', // 다이나믹 import (System.import 는 더이상 사용되지 않습니다.) - import 방식이 require.ensure보다 더 좋습니다. (import 방식은 catch 를 활용해 에러가 났을 때 대처)
-							'@babel/plugin-proposal-class-properties', // class property 관련된 문제를 해결
-							'@babel/plugin-proposal-object-rest-spread' // … 변수 spread 과 관련된 문제
-						], 
+							// plugins 
+							plugins: [
+								'@babel/plugin-syntax-dynamic-import', // 다이나믹 import (System.import 는 더이상 사용되지 않습니다.) - import 방식이 require.ensure보다 더 좋습니다. (import 방식은 catch 를 활용해 에러가 났을 때 대처)
+								'@babel/plugin-proposal-class-properties', // class property 관련된 문제를 해결
+								'@babel/plugin-proposal-object-rest-spread' // … 변수 spread 과 관련된 문제
+							], 
+						}
+					},
+					{
+						loader: 'eslint-loader',
+						options: {
+							
+						},
 					}
-				}
+				]
 			},
 			// Typescript
 			// https://github.com/TypeStrong/ts-loader
@@ -396,6 +405,9 @@ module.exports = {
 			// 현재 웹팩 자산 제거를 허용하지 않음 (default: true)
 			//protectWebpackAssets: true,
 		}),
+
+		// ESLint
+		//new ESLintPlugin(),
 
 		// 자바스크립트 모듈 사용에 누락된 디펜던시 자동 설치 
 		/*new NpmInstallPlugin({
