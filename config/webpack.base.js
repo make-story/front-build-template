@@ -219,18 +219,20 @@ module.exports = {
 				use: [
 					{
 						// .babelrc 있다면 해당 파일을 먼저 참조 하며, 없을 경우 webpack options 에 부여한 presets plugins 을 참조
-						loader: 'babel-loader',  // npm install --save-dev babel-loader @babel/core @babel/preset-env 
+						// npm install --save-dev babel-loader @babel/core @babel/preset-env 
+						loader: 'babel-loader', 
 						options: {
 							// presets
-							// @babel/preset-env를 설정하여, babel에서 미리 정의해둔 환경으로 ES6에서 ES5로 변환
-							// @babel/preset-env은 함께 사용되어야 하는 Babel 플러그인을 모아 둔 것으로 Babel 프리셋이라고 부른다. 
-							// Babel이 제공하는 공식 Babel 프리셋(Official Preset) : @babel/preset-env, @babel/preset-flow, @babel/preset-react, @babel/preset-typescript
-							// @babel/preset-env도 공식 프리셋의 하나이며 필요한 플러그인 들을 프로젝트 지원 환경에 맞춰서 동적으로 결정해 준다.
+							// @babel/preset-env 를 설정하여, Babel 에서 미리 정의해둔 환경으로 ES6 에서 ES5 로 변환
+							// @babel/preset-env 은 함께 사용되어야 하는 Babel 플러그인을 모아 둔 것으로 Babel 프리셋이라고 부른다. 
+							// Babel이 제공하는 공식 Babel 프리셋(Official Preset) : @babel/preset-env, @babel/preset-flow, @babel/preset-react, @babel/preset-typescript 등
+							// @babel/preset-env 도 공식 프리셋의 하나이며, 필요한 플러그인 들을 프로젝트 지원 환경에 맞춰서 동적으로 결정해 준다.
 							//presets: ['@babel/preset-env'] 
 							"presets": [
 								[
 									"@babel/preset-env", 
-									//"@babel/preset-typescript",
+									"@babel/preset-react", // React 지원
+									"@babel/preset-typescript", // Typescript 지원
 									{
 										// async / await 사용때문에 크롬버전 지정
 										"targets": {"chrome": "55"}, // chrome 55 이상으로 지정 
@@ -238,7 +240,6 @@ module.exports = {
 									},
 								]
 							],
-
 							// plugins 
 							plugins: [
 								'@babel/plugin-syntax-dynamic-import', // 다이나믹 import (System.import 는 더이상 사용되지 않습니다.) - import 방식이 require.ensure보다 더 좋습니다. (import 방식은 catch 를 활용해 에러가 났을 때 대처)
@@ -248,6 +249,7 @@ module.exports = {
 						}
 					},
 					{
+						// ESLint 적용 (코딩 품질과 스타일을 검사하는 정적 코드 분석 도구)
 						loader: 'eslint-loader',
 						options: {
 							
