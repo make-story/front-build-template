@@ -19,6 +19,8 @@ const CircularDependencyPlugin = require('circular-dependency-plugin'); // 순�
 const configBase = require(path.resolve(__dirname, './config/webpack.base.js')); // 공통설정 (기본 프로젝트)
 const configProduction = require(path.resolve(__dirname, './config/webpack.production.js')); // 웹팩 배포용 설정 
 const configDevelopment = require(path.resolve(__dirname, './config/webpack.development.js')); // 웹팩 개발모드 설정 
+//const configReact = require(path.resolve(__dirname, './config/webpack.react.js')); // 리액트 프로젝트 
+//const configTypeScript = require(path.resolve(__dirname, './config/webpack.typescript.js')); // 타입스크립트 프로젝트 
 
 /*
 -

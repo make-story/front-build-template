@@ -228,17 +228,18 @@ module.exports = {
 							// Babel이 제공하는 공식 Babel 프리셋(Official Preset) : @babel/preset-env, @babel/preset-flow, @babel/preset-react, @babel/preset-typescript 등
 							// @babel/preset-env 도 공식 프리셋의 하나이며, 필요한 플러그인 들을 프로젝트 지원 환경에 맞춰서 동적으로 결정해 준다.
 							//presets: ['@babel/preset-env'] 
-							"presets": [
+							presets: [
+								"@babel/preset-react", // React 지원
+								"@babel/preset-typescript", // Typescript 지원
+								// 하나의 설정 '@babel/preset-env' 과 그에 따른 옵션 { ... } 은 하나의 [ ... ] 배열로 감싼다.
 								[
 									"@babel/preset-env", 
-									"@babel/preset-react", // React 지원
-									"@babel/preset-typescript", // Typescript 지원
 									{
 										// async / await 사용때문에 크롬버전 지정
 										"targets": {"chrome": "55"}, // chrome 55 이상으로 지정 
-										"debug": true
+										"debug": true,
 									},
-								]
+								],
 							],
 							// plugins 
 							plugins: [
