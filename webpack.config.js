@@ -19,8 +19,8 @@ const CircularDependencyPlugin = require('circular-dependency-plugin'); // 순�
 const configBase = require(path.resolve(__dirname, './config/webpack.base.js')); // 공통설정 (기본 프로젝트)
 const configProduction = require(path.resolve(__dirname, './config/webpack.production.js')); // 웹팩 배포용 설정 
 const configDevelopment = require(path.resolve(__dirname, './config/webpack.development.js')); // 웹팩 개발모드 설정 
-//const configReact = require(path.resolve(__dirname, './config/webpack.react.js')); // 리액트 프로젝트 
-//const configTypeScript = require(path.resolve(__dirname, './config/webpack.typescript.js')); // 타입스크립트 프로젝트 
+const configReact = require(path.resolve(__dirname, './config/webpack.react.js')); // 리액트 프로젝트 
+const configTypeScript = require(path.resolve(__dirname, './config/webpack.typescript.js')); // 타입스크립트 프로젝트 
 
 /*
 -
@@ -364,7 +364,7 @@ module.exports = (environment, argv) => {
 	}
 
 	// 프로젝트별 웹팩 설정 변경 (프로젝트별로 웹팩 설정이 필요할 때)
-	/*console.log('[webpack] project', project);
+	console.log('[webpack] project', project);
 	switch(project) {
 		case 'react':
 			config = Object.assign({}, config, configReact);
@@ -373,7 +373,7 @@ module.exports = (environment, argv) => {
 			config = Object.assign({}, config, configTypeScript);
 			break;
 		case 'vue':
-			config = webpackMerge(config, configVue);
+			//config = webpackMerge(config, configVue);
 			//config = merge(config, configVue);
 			break;
 		case 'ec':
@@ -384,7 +384,7 @@ module.exports = (environment, argv) => {
 			//config = [Object.assign({}, config), configEC];
 			//config = configEC;
 			break;
-	}*/
+	}
 
 	// config 설정 강제변경/주입(공통설정) - output 경로 등
 	config = (Array.isArray(config) ? config/*웹팩 설정을 여러개 실행할 경우*/ : [config]).map((config, index, array) => {
