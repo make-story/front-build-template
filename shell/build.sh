@@ -8,6 +8,14 @@
 #SHELL_PATH=`pwd -P`
 PROJECT_PATH="/usr/src/project"
 PROJECT_NAME="makestory"
+
+echo "Node.js 버전"
+node -v
+# which는 특정명령어의 위치를 찾아주는 명령어
+which node
+# whereis는 명령어의 실행파일위치, 소스위치, man 페이지파일의 위치를 찾아주는 명령어
+#whereis node
+
 if [ -n "$1" ] && [ -n "$2" ];
 	then
 
