@@ -20,13 +20,15 @@ if [ -n "$1" ];
         PROJECT_PATH=$PROJECT_PATH/$PROJECT_NAME.test
         APP_NAME=$APP_NAME-develop
         SOCKET_NAME=$SOCKET_NAME-develop
-        source ./env/test.env; 
+        echo "test.env"
+        source $PROJECT_PATH/env/test.env; 
     elif [ "master" == "$1" ] || [ "origin/master" == "$1" ];
         then
         PROJECT_PATH=$PROJECT_PATH/$PROJECT_NAME
         APP_NAME=$APP_NAME-master
         SOCKET_NAME=$SOCKET_NAME-master
-        source ./env/production.env;
+        echo "production.env"
+        source $PROJECT_PATH/env/production.env;
     else 
         echo "Git 브랜치 조건확인이 필요합니다."
         exit;
@@ -45,17 +47,21 @@ if [ -n "$1" ];
     PM2=`$PROJECT_PATH/node_modules/pm2/bin/pm2 list | grep "$APP_NAME" | awk '{print $4}'`
     if [ -n "$PM2" ];
 	    then
+        echo "$APP_NAME Stop!"
         $PROJECT_PATH/node_modules/pm2/bin/pm2 delete "$PM2"
     fi
     PM2=`$PROJECT_PATH/node_modules/pm2/bin/pm2 list | grep "$SOCKET_NAME" | awk '{print $4}'`
     if [ -n "$PM2" ];
 	    then
+        echo "$SOCKET_NAME Stop!"
         $PROJECT_PATH/node_modules/pm2/bin/pm2 delete "$PM2"
     fi
 
     # "node start"
     #BUILD_ID=dontKillMe ACTIVE=test BUILD_NUMBER=${BUILD} nohup node servers/main.js &
+    echo "$APP_NAME Start!"
     $PROJECT_PATH/node_modules/pm2/bin/pm2 start $PROJECT_PATH/servers/main.js --name "$APP_NAME"
+    echo "$SOCKET_NAME Start!"
     $PROJECT_PATH/node_modules/pm2/bin/pm2 start $PROJECT_PATH/servers/websocket.js --name "$SOCKET_NAME"
     unset BUILD_NUMBER
 else 
