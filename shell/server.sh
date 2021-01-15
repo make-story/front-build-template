@@ -5,6 +5,10 @@
 # $ sh shell/server.sh $GIT_BRANCH $BUILD
 # $ sh shell/server.sh 'master' '빌드번호'
 
+# $ ps -ef | grep pm2
+# $ ps -ef | grep node
+# $ kill -9 <PID>
+
 #SHELL_PATH=`pwd -P`
 PROJECT_PATH="/Users/sung-minyu/Development/github"
 PROJECT_NAME="webpagetest"
