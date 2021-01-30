@@ -16,6 +16,7 @@ const CircularDependencyPlugin = require('circular-dependency-plugin'); // 순�
 //const WebpackAssetsManifest = require('webpack-assets-manifest'); // 빌드 결과 json 생성 
 
 // webpack config (웹팩설정 정보)
+const configEntry = require(path.resolve(__dirname, './config/webpack.entry.js')); // 기본 엔트리
 const configBase = require(path.resolve(__dirname, './config/webpack.base.js')); // 공통설정 (기본 프로젝트)
 const configProduction = require(path.resolve(__dirname, './config/webpack.production.js')); // 웹팩 배포용 설정 
 const configDevelopment = require(path.resolve(__dirname, './config/webpack.development.js')); // 웹팩 개발모드 설정 
@@ -347,17 +348,18 @@ module.exports = (environment, argv) => {
 
 	// 웹팩 기본 설정 mode: 'none' | 'development' | 'production'
 	console.log('[webpack] mode', mode);
+	config = webpackMerge(config, configEntry, configBase);
 	switch(mode) {
 		case 'none':
 			
 			break;
 		case 'development':
-			config = webpackMerge(configBase, configDevelopment); 
+			config = webpackMerge(config, configDevelopment); 
 			//config = merge(configBase, configDevelopment); 
 			//config = Object.assign({}, configBase, configDevelopment); // 배열의 경우 merge 가 아닌, assign 마지막 파라미터 값으로 덮어쓰는(기존값 지우고 마지막 값 적용) 형태
 			break;
 		case 'production':
-			config = webpackMerge(configBase, configProduction);
+			config = webpackMerge(config, configProduction);
 			//config = merge(configBase, configProduction); 
 			//config = Object.assign({}, configBase, configProduction);
 			break;
@@ -367,10 +369,12 @@ module.exports = (environment, argv) => {
 	console.log('[webpack] project', project);
 	switch(project) {
 		case 'react':
-			config = Object.assign({}, config, configReact);
+			config = webpackMerge(config, configReact); 
+			//config = Object.assign({}, config, configReact);
 			break;
 		case 'typescript':
-			config = Object.assign({}, config, configTypeScript);
+			config = webpackMerge(config, configTypeScript); 
+			//config = Object.assign({}, config, configTypeScript);
 			break;
 		case 'vue':
 			//config = webpackMerge(config, configVue);
