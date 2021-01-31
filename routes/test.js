@@ -18,7 +18,7 @@ let reduxThunk = manifestRead({name: 'redux-thunk'});
 let news = manifestRead({name: 'news'});*/
 let test = manifestRead({name: 'test'});
 
-// SPA 방식에 따라 내부 라우트가 설정되어 있을 수 있으므로 '*' 로 설정
+// SPA 방식에 따라 JavaScript 내부 라우트가 설정되어 있을 수 있으므로 '*' 로 설정
 router.get('*', (request, response) => {
 	const css = {
 		test: manifestTag.css({ manifest: test }),
