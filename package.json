@@ -20,8 +20,8 @@
     "webpack-typescript-dev-server": "webpack-dev-server --config webpack.config.js --progress --mode development --project typescript",
     "server": "node servers/main.js",
     "server-monit": "./node_modules/pm2/bin/pm2 monit",
-    "server-test": "./node_modules/pm2/bin/pm2 start ./servers/main.js --watch dist --no-daemon",
-    "server-watch": "./node_modules/pm2/bin/pm2 start ./servers/main.js --watch --ignore-watch='dist data'",
+    "server-test": "./node_modules/pm2/bin/pm2 start ./servers/main.js --watch --ignore-watch='dist data' --no-daemon",
+    "server-watch": "./node_modules/pm2/bin/pm2 start ./servers/main.js --watch dist",
     "server-start": "./node_modules/pm2/bin/pm2 start ./servers/main.js",
     "server-stop": "./node_modules/pm2/bin/pm2 stop ./servers/main.js",
     "server-nodemon": "nodemon --watch ./dist --ignore ./data servers/main.js"
