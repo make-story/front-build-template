@@ -387,8 +387,20 @@ module.exports = {
 		//filename: `[name]/[name].${getDatetime()}.js`,
 		chunkFilename: '[name]/[id].[chunkhash].js',
 
-		// 빌드 결과물을 라이브러리 형태로 외부에서 사용가능하도록 설정 (externals 설정과 연동)
+		// 빌드 결과물 내부에 다양한 JavaScript 모듈화 방식 코드 추가 (externals 설정과 연동)
 		/*
+		-
+		// library: ['ui'] 
+		// libraryTarget: 'umd'
+		if(typeof exports === 'object' && typeof module === 'object')
+			module.exports = factory();
+		else if(typeof define === 'function' && define.amd)
+			define([], factory);
+		else if(typeof exports === 'object')
+			exports["ui"] = factory();
+		else
+			root["ui"] = factory();
+
 		-
 		libraryTarget 설정값 종류
 		"var" - 변수를 설정하여 내보내기 : var Library = xxx (기본)
@@ -398,8 +410,9 @@ module.exports = {
 		"amd" - AMD로 내보내기 (옵션으로 설정 - 라이브러리 옵션을 통해 이름 설정)
 		"umd" - AMD, CommonJS2로 내보내기 또는 루트의 등록 정보로 내보내기 | Default : “var” output.library가 설정되어 있지 않지만 output.libraryTarget이 var 이외의 값으로 설정된 경우 내보낸 객체의 모든 속성이 복사됩니다. (예외 and, commonjs2 및 umd)
 		*/
+		//library: ['ui'],
 		//libraryTarget: 'umd',
-		//library: 'App',
+		//libraryExport: 'default',
 	},
 
 	// 부가적인 기능
