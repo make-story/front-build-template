@@ -27,7 +27,7 @@ module.exports = {
 		
 		// 서버 포트 설정 
 		// 기본값은 8080
-		port: 9000,
+		port: 9000, // 주의! 기본값 8080 은 톰캣과 충돌!
 		
 		// 정적파일을 제공할 경로 (기본값은 output.path)
 		/*
@@ -107,7 +107,13 @@ module.exports = {
 		// output.publicPath 값이 설정되어 있을 경우, devServer.contentBase 값 설정이 필요하다.
 		// (output.path 경로에서 자동으로 빌드 리소스를 가져오는데, output.publicPath 설정할 경우 가져올 경로가 변경된다. 즉, publicPath 주석처리 필요)
 		new HtmlWebpackPlugin({
+			// 브라우저에서 접근할 파일명
+			// http://<devServer.host>:<devServer.port>/<output.publicPath>/<HtmlWebpackPlugin 옵션 filename>
+			// http://0.0.0.0:8080/
 			//filename: path.resolve(__dirname, '../public/index.html'),
+
+			// dev-server html 에 포함할 시용자 템플릿
+			//template: 'webpack-dev-server-template.html'
 			template: path.resolve(__dirname, '../pages/webpack-dev.ejs'),
 			templateParameters: function(compilation, assets, options) {
 				/*
@@ -148,8 +154,10 @@ module.exports = {
 					js,
 				};
 			},
-			inject: false,
-			minify: false,
+
+			// 기타 옵션
+			inject: false, // 스크립트 삽입 - true || 'head' || 'body' || false
+			minify: false, // 코드 압축여부
 			showErrors: true, // 에러 발생시 메세지가 브라우저 화면에 노출 된다.
 		}),
 		// 번들링 구조를 시각적으로 보여주는 기능
