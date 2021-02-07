@@ -59,7 +59,8 @@
 		"forceConsistentCasingInFileNames": true /* 같은 파일에 대한 일관되지 않은 참조를 허용하지 않을 지 여부 */
 	},
 	"include": [
-		"src/typescript/*"
+		"src/**/*.ts", 
+		"src/**/*.tsx"
 	],
 	"exclude": [
 		"node_modules",
