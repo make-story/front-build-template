@@ -1,3 +1,7 @@
+/**
+ * Node.js 서버는 빠르게 확인, 빠르게 죽이고, 빠르게 재시작하는 전략을 가져간다.
+ * https://deview.kr/data/deview/session/attach/1600_T1_%EC%86%90%EC%B0%AC%EC%9A%B1_%EC%96%B4%EC%84%9C%EC%99%80_SSR%EC%9D%80_%EC%B2%98%EC%9D%8C%EC%9D%B4%EC%A7%80.pdf
+ */
 // https://expressjs.com/ko/api.html
 const path = require('path');
 const http = require('http');
@@ -11,6 +15,14 @@ const paths = require('../config/paths');
 const env = require(path.resolve(paths.appPath, 'config/env'));
 
 const app = express(); 
+
+// Exception Handler 등록 (http://nodeqa.com/nodejs_ref/1)
+// UncatchedException 이 발생하면 Node.js 인스턴스가 죽음 방지
+// https://nodejs.org/api/process.html#process_warning_using_uncaughtexception_correctly
+/*process.on('uncaughtException', (error) => {
+	console.log('Caught exception: ' + error);
+	// 서버 재시작
+});*/
 
 // view engine setup
 app.set('view engine', 'ejs'); // view 엔진 설정 - index.ejs 등 확장자 - http://ejs.co/
