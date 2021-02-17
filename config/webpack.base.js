@@ -260,13 +260,13 @@ module.exports = {
 							], 
 						}
 					},
-					{
+					/*{
 						// ESLint 적용 (코딩 품질과 스타일을 검사하는 정적 코드 분석 도구)
 						loader: 'eslint-loader',
 						options: {
 							
 						},
-					}
+					}*/
 				]
 			},
 			// Typescript
