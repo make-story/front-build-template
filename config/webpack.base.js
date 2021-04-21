@@ -58,6 +58,9 @@ module.exports = {
 	// webpack mode: 'none' | 'development' | 'production'
 	//mode: 'production',
 
+	// Node.js 환경에서 사용하기 위한 빌드 (기본값: web)
+	//target: 'node', 
+
 	// devtool
 	devtool: 'inline-source-map',
 
