@@ -496,11 +496,12 @@ module.exports = {
 		}),*/
 	],
 
-	// 종속성을 제외하는 방법을 제공 (라이브러리)
-	// webpack 에 의해 번들되어서는 안되지만, 대신 번들 결과에 의해 요청된 종속성을 나타냅니다.
-	// output.libraryTarget에 의해서 지정된대로 또는 key-value 쌍으로 된 객체 정의를 사용하여 종속성별로 수정
+	// 종속성을 제외하는 방법을 제공 (외부 라이브러리 사용)
+	// 외부 <script src="jquery.js"></script> 라이브러리를 런타임에 종속적으로 사용할 경우
+	// externals: { jquery: 'jQuery' }		externals: { import에서 사용할 모듈명: '런타임에서의 외부라이브러리 전역변수' }
+	// import $ from 'jquery';				종속적으로 사용하는 모듈에서의 import 값 from 'externals 의 해당 모듈 key값'
 	externals: [
-		//WebpackNodeExternals(),
+		//WebpackNodeExternals(), // node_modules
 	],
 
 	// 웹팩4 에서 최적화 관련 플러그인들이 모두 optimization 속성으로 통합
