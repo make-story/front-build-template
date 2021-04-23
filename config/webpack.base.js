@@ -386,10 +386,16 @@ module.exports = {
 		// [hash]는 매번 웹팩 컴파일 시 랜덤한 문자열을 붙여줍니다. 해시 길이 지정가능 - [hash:16]
 		// [hash]가 컴파일할 때마다 랜덤 문자열을 붙여준다면, 
 		// [chunkhash]는 파일이 달라질 때에만 랜덤 값이 바뀝니다. (이것을 사용하면 변경되지 않은 파일들은 계속 캐싱하고 변경된 파일만 새로 불러올 수 있습니다.)
+		// [contenthash]
 		//filename: '[name].bundle.js',
 		filename: '[name]/[name].[hash].js',
 		//filename: `[name]/[name].${getDatetime()}.js`,
 		chunkFilename: '[name]/[id].[chunkhash].js',
+		/*
+		filename: (pathData) => {
+			return pathData.chunk.name === 'main' ? '[name].js' : '[name]/[name].js';
+		},
+		*/
 
 		// 빌드 결과물 내부에 다양한 JavaScript 모듈화 방식 코드 추가 (externals 설정과 연동)
 		/*
