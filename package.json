@@ -4,6 +4,7 @@
   "description": "",
   "main": "servers/main.js",
   "scripts": {
+    "help": "echo \"개빌모드(watch) :\n$ yarn wabpack-watch\n$ yarn server-watch\"",
     "lint": "eslint src --fix",
     "local": "source ./env/local.env; npm-run-all build --parallel server",
     "test": "source ./env/test.env; npm-run-all build --parallel server",
