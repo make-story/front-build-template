@@ -105,13 +105,14 @@ module.exports = {
 		extensions: ['.mjs', '.js', '.json', '.jsx', '.ts', '.tsx', '.vue'],
 
 		// alias
-		// key 가 모듈이름이 되는 객체를 만듭니다. value 는 모듈 경로입니다. (정규식)
+		// key 가 모듈이름(또는 단축 경로명)이 되는 객체를 만듭니다. value 는 모듈 경로입니다. (정규식)
 		// ProvidePlugin 연동
 		alias: {
 			//jquery: "common/cjos/lib/m/jquery.js" // define(['jquery'], ...) 대응 (/node_modules/ 내부 jquery 가 설치되지 않았을 경우, 경로지정)
 			//'components': path.resolve(__dirname, '..', 'src', 'components'),
       		//'containers': path.resolve(__dirname, '..', 'src', 'containers'),
       		//'assets': path.resolve(__dirname, '..', 'src', 'assets'),
+			'@src': path.resolve(__dirname, '../src/'),
 		},
 
 		// 활성화되면 심볼릭 링크 된 리소스는 심볼릭 링크 된 위치가 아닌 실제 경로 로 확인
