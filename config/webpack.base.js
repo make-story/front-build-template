@@ -18,6 +18,33 @@ https://blog.outsider.ne.kr/1283
 트리 쉐이킹
 트리 쉐이킹(Tree Shaking)은 일명 죽은 코드라고 불리는 것을 제거하기 위한 자바스크립트 에서 사용되는 용어로써 Rollup에 의해 알려졌다.
 웹팩 4+ 에서는 package.json의 sideEffects라는 속성으로 컴파일러에게 힌트를 제공할 수 있게 되었다.
+
+-
+output 전역사용 가능배포 <-> externals 전역 변수(라이브러리)사용
+// 배포
+output: {
+	library: ['tui', 'util'],
+	libraryTarget: 'umd',
+	path: path.resolve(__dirname, 'dist'),
+	publicPath: 'dist',
+	filename: FILENAME
+},
+
+// 사용
+externals: {
+	'jquery': {
+		'commonjs': 'jquery',
+		'commonjs2': 'jquery',
+		'amd': 'jquery',
+		'root': '$'
+	},
+	'tui-code-snippet': {
+		'commonjs': 'tui-code-snippet',
+		'commonjs2': 'tui-code-snippet',
+		'amd': 'tui-code-snippet',
+		'root': ['tui', 'util'] // tui.util
+	}
+},
 */
 
 // 모듈
@@ -503,12 +530,24 @@ module.exports = {
 		}),*/
 	],
 
-	// 종속성을 제외하는 방법을 제공 (외부 라이브러리 사용)
+	// 외부 라이브러리(종속성) 사용 가능 방법 제공 (외부 라이브러리 사용)
+	// https://webpack.js.org/configuration/externals/
 	// 외부 <script src="jquery.js"></script> 라이브러리를 런타임에 종속적으로 사용할 경우
 	// externals: { jquery: 'jQuery' }		externals: { import에서 사용할 모듈명: '런타임에서의 외부라이브러리 전역변수' }
 	// import $ from 'jquery';				종속적으로 사용하는 모듈에서의 import 값 from 'externals 의 해당 모듈 key값'
 	externals: [
 		//WebpackNodeExternals(), // node_modules
+		/*{
+			jquery: 'jQuery',
+		},*/
+		/*{
+			jquery: {
+            	commonjs: 'jquery',
+            	commonjs2: 'jquery',
+            	amd: 'jquery',
+            	root: '$'
+        	},
+		},*/
 	],
 
 	// 웹팩4 에서 최적화 관련 플러그인들이 모두 optimization 속성으로 통합

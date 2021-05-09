@@ -9,11 +9,11 @@ const env = require(path.resolve(__dirname, './config/env'));
 const manifestWrite = require(path.resolve(__dirname, './config/manifest-write'));
 
 // webpack plugin 
+//const WebpackAssetsManifest = require('webpack-assets-manifest'); // 빌드 결과 json 생성 
 const ManifestPlugin = require('webpack-manifest-plugin'); // 빌드 결과 json 생성 - (2.x 와 3.x 이상 버전 사용방법 차이 있음)
 //const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin'); // 순환 종속(import) 의존성 감지 (http://sudheerjonna.com/blog/2019/01/27/how-to-detect-and-avoid-cyclic-dependencies-in-javascript/)
 //const CopyPlugin = require('copy-webpack-plugin'); // 개별 파일 또는 전체 디렉토리를 빌드 디렉토리에 복사
-//const WebpackAssetsManifest = require('webpack-assets-manifest'); // 빌드 결과 json 생성 
 
 // webpack config (웹팩설정 정보)
 const configEntry = require(path.resolve(__dirname, './config/webpack.entry.js')); // 기본 엔트리
