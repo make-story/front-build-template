@@ -18,7 +18,7 @@ if [ -n "$1" ];
     then
 
     # "env"
-    export BUILD_NUMBER=$2 # '/빌드번호/빌드결과' 경로로 서버 실행
+    export BUILD_NUMBER=$2 # '/빌드번호/빌드결과' 빌드결과물 바라보도록 서버 실행
     if [ "develop" == "$1" ] || [ "origin/develop" == "$1" ];
         then
         PROJECT_PATH=$PROJECT_PATH/$PROJECT_NAME.test
