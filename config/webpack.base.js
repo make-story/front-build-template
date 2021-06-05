@@ -89,6 +89,7 @@ module.exports = {
 	//target: 'node', 
 
 	// devtool
+	//devtool: process.env.NODE_ENV === 'development' ? "inline-source-map" : "source-map",
 	//devtool: 'inline-source-map',
 	devtool : "source-map",
 
