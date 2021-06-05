@@ -11,9 +11,11 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const express = require('express');
 
-const paths = require('../config/paths');
-const env = require(path.resolve(paths.appPath, 'config/env'));
+// env
+const env = require(path.resolve(__dirname, '../config/env'));
+const paths = require(path.resolve(__dirname, '../config/paths'));
 
+// app
 const app = express(); 
 
 // Exception Handler 등록 (http://nodeqa.com/nodejs_ref/1)
