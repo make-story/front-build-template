@@ -299,12 +299,6 @@ module.exports = {
 					}*/
 				]
 			},
-			// .js 출력파일 소스맵 처리
-			{
-				enforce : 'pre',
-				test : /\.js$/,
-				loader : 'source-map-loader'
-			},
 			// Typescript
 			// https://github.com/TypeStrong/ts-loader
 			{

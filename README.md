@@ -27,6 +27,12 @@ http://makestory.net/media/#/view/321
 
 -----
 
+## Webpack 4.x 와 5.x 이상 버전간 차이 있음
+- ts-loader : 8.x (webpack4)
+- 기존 플러그인, 로더 등 설치형으로 사용하던 것들이 웹팩 기본으로 제공하는 것에 대한 확인필요
+
+-----
+
 ## React + Typescript
 ```
 $ yran add react react-dom  
