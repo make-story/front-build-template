@@ -89,7 +89,8 @@ module.exports = {
 	//target: 'node', 
 
 	// devtool
-	devtool: 'inline-source-map',
+	//devtool: 'inline-source-map',
+	devtool : "source-map",
 
 	// entry, 로더를 해석하기 위한 기본 경로인 절대 경로
 	// [중요!] context 경로에 따라, entry, resolve.modules 경로 기준이 된다.
@@ -134,12 +135,10 @@ module.exports = {
 		// alias
 		// key 가 모듈이름(또는 단축 경로명)이 되는 객체를 만듭니다. value 는 모듈 경로입니다. (정규식)
 		// ProvidePlugin 연동
+		// 타입스크립트 환경에서 해당 설정을 사용할 경우, tsconfig 에도 같은 설정을 해줘야 함 (baseUrl, paths)
 		alias: {
 			//jquery: "common/cjos/lib/m/jquery.js" // define(['jquery'], ...) 대응 (/node_modules/ 내부 jquery 가 설치되지 않았을 경우, 경로지정)
-			//'components': path.resolve(__dirname, '..', 'src', 'components'),
-      		//'containers': path.resolve(__dirname, '..', 'src', 'containers'),
-      		//'assets': path.resolve(__dirname, '..', 'src', 'assets'),
-			'@src': path.resolve(__dirname, '../src/'),
+			'@src': path.resolve(__dirname, '../src/'), // import '@/components/button';
 		},
 
 		// 활성화되면 심볼릭 링크 된 리소스는 심볼릭 링크 된 위치가 아닌 실제 경로 로 확인
@@ -299,6 +298,12 @@ module.exports = {
 						},
 					}*/
 				]
+			},
+			// .js 출력파일 소스맵 처리
+			{
+				enforce : 'pre',
+				test : /\.js$/,
+				loader : 'source-map-loader'
 			},
 			// Typescript
 			// https://github.com/TypeStrong/ts-loader

@@ -24,3 +24,81 @@ http://makestory.net/media/#/view/540
   
 > Git 정리문서  
 http://makestory.net/media/#/view/321  
+
+-----
+
+## React + Typescript
+```
+$ yran add react react-dom  
+$ yran add typescript ts-loader
+$ yarn add babel-loader @babel/preset-env @babel/preset-typescript @babel/preset-react 
+$ yarn add @types/react @types/react-dom 
+```
+
+### .babelrc 또는 webpack.config.js 설정   
+(webpack 에 babel presets 설정이 있고, .babelrc 파일에도 presets 설정이 있다면, .babelrc 파일이 우선순위를 가짐)
+```json
+{
+	"presets": [
+		"@babel/preset-env",
+		"@babel/preset-typescript",
+		"@babel/preset-react"
+	]
+}
+```
+```javascript
+module.exports = {
+	// ...
+    resolve: {
+		modules: [
+			'node_modules',
+			path.join(__dirname, 'src'),
+		],
+		extensions: ['.ts', '.tsx', '.js', '.jsx', '.css', '.scss', '.json'],
+	},
+	module: {
+		rules: [
+			{ 
+				test: /\.(js|jsx)$/,
+				exclude: /node_modules/,
+				use: {
+					loader: 'babel-loader',
+					options: {
+						presets: [
+							'@babel/preset-env',
+							'@babel/preset-typescript',
+							'@babel/preset-react',
+						] 
+					},
+				},
+			},
+			{
+				test: /\.(ts|tsx)$/, // TypeScript 를 사용 할때는 .ts (리액트 컴포넌트의 경우에는 .tsx) 확장자를 사용
+				exclude: /node_modules/,
+				use: [
+					{
+						loader: 'ts-loader',
+						options: {
+							transpileOnly: true
+						}
+					},
+				],
+			},
+		]
+	},
+	// ...
+};
+```
+
+### tsconfig.json 설정 
+```json
+{
+  "compilerOptions": {
+    "sourceMap": true,  // 소스맵(*.map) 파일 생성 여부
+    "jsx": "react"  // Resolve: Cannot use JSX unless '--jsx' flag is provided
+  }
+}
+```
+
+-----
+
