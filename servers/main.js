@@ -18,13 +18,12 @@ const paths = require(path.resolve(__dirname, '../config/paths'));
 // app
 const app = express(); 
 
-// Exception Handler 등록 (http://nodeqa.com/nodejs_ref/1)
-// UncatchedException 이 발생하면 Node.js 인스턴스가 죽음 방지
+// Exception Handler 등록
+// UncatchedException 이 발생하면 Node.js 인스턴스가 죽음(서버다운) 방지
 // https://nodejs.org/api/process.html#process_warning_using_uncaughtexception_correctly
-/*process.on('uncaughtException', (error) => {
+process.on('uncaughtException', (error) => {
 	console.log('Caught exception: ' + error);
-	// 서버 재시작
-});*/
+});
 
 // view engine setup
 app.set('view engine', 'ejs'); // view 엔진 설정 - index.ejs 등 확장자 - http://ejs.co/
@@ -76,12 +75,16 @@ app.get('/ysm', (request, response) => {
 app.use('/', require(path.resolve(paths.appPath, 'routes/test')));
 
 // catch 404 and forward to error handler
+// https://expressjs.com/ko/guide/error-handling.html
 app.use((request, response, next) => {
+	//const error = new Error(`${request.method} ${request.url} 라우터가 없습니다.`);
+	//error.status = 404;
+	//next(error);
+	
+	// next app.use 파라미터로 error 정보 전달 
 	next(createError(404));
 });
-
-// error handler
-/*app.use(function(error, request, response, next) {
+app.use(function(error, request, response, next) {
 	// set locals, only providing error in development
 	response.locals.message = error.message;
 	response.locals.error = request.app.get('env') === 'development' ? error : {};
@@ -90,7 +93,7 @@ app.use((request, response, next) => {
 	response.status(error.status || 500);
 	response.send('페이지 없음!');
 	//response.render('error');
-});*/
+});
 
 // 서버 실행
 /*const server = app.listen(env.port, () => {
