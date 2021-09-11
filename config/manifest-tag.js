@@ -6,7 +6,7 @@ const env = require(path.resolve(paths.appPath, 'config/env'));
 const manifestRead = require(path.resolve(paths.appPath, 'config/manifest-read'));
 
 // link rel="stylesheet" 태그 생성
-const createTagCSS = manifest => {
+const getTagCSS = manifest => {
 	let arr = [];
 	if(!Array.isArray(manifest.css)) {
 		return '';
@@ -18,7 +18,7 @@ const createTagCSS = manifest => {
 };
 
 // script 태그 생성
-const createTagJS = manifest => {
+const getTagJS = manifest => {
 	let arr = [];
 	if(!Array.isArray(manifest.js)) {
 		return '';
@@ -37,10 +37,10 @@ const getTag = type => ({ manifest={}, name="" }) => {
 	}
 	switch(type) {
 		case "css":
-			tag = createTagCSS(manifest);
+			tag = getTagCSS(manifest);
 			break;
 		case "js":
-			tag = createTagJS(manifest)
+			tag = getTagJS(manifest)
 			break;
 	}
 	return tag;
