@@ -87,7 +87,7 @@ express-session 1.5 버전 이전에는 내부적으로 cookie-parser를 사용�
 1.5 버전 이후부터는 사용하지 않게 되어 순서가 상관없어졌습니다. 그래도 현재 어떤 버전을 사용하고 있는지 모른다면 
 cookie-parser 미들웨어 뒤에 놓는 것이 안전합니다.
 */
-app.use(session({  
+/*app.use(session({  
 	resave: false, // 요청이 올 때 세션에 수정 사항이 생기지 않더라도 세션을 다시 저장할 지 설정
 	saveUninitialized: true, // 세션에 저장할 내역이 없더라도 처음부터 세션을 생성할지 설정하는 것
 	// 세션관리시 클라이언트에 쿠키를 보냅니다.
@@ -105,7 +105,7 @@ app.use(session({
 	// 기본적으로 메모리에 세션을 저장하도록 되어 있어, 서버를 재시작하면 메모리가 초기화되어 세션이 모두 사라집니다.
 	// 따라서 배포시에는 store에 데이터베이스를 연결하여 세션을 유지하는 것이 좋습니다.
 	//store
-}));
+}));*/
 
 // 고정 경로 설정 (JS, CSS, Images, Files 등 폴더 연결)
 // app.use(express.static('../경로'))) 했을 경우, $ yarn server 을 실행시키는 명령은 root 이므로, root 기준 상대경로가 설정됨
