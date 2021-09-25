@@ -10,13 +10,12 @@ const createError = require('http-errors');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const express = require('express');
+const session = require('express-session'); // https://github.com/expressjs/session
+const dotenv = require('dotenv');
 
 // env
 const env = require(path.resolve(__dirname, '../config/env'));
 const paths = require(path.resolve(__dirname, '../config/paths'));
-
-// app
-const app = express(); 
 
 // Exception Handler 등록
 // UncatchedException 이 발생하면 Node.js 인스턴스가 죽음(서버다운) 방지
@@ -25,11 +24,16 @@ process.on('uncaughtException', (error) => {
 	console.log('Caught exception: ' + error);
 });
 
-// view engine setup
+// express
+dotenv.config(); // 루트 폴더 '.env' 파일
+const app = express(); 
+
+// app.set(name, value)
+// https://expressjs.com/ko/api.html#app.settings.table
+// http://expressjs.com/en/guide/using-template-engines.html
 app.set('view engine', 'ejs'); // view 엔진 설정 - index.ejs 등 확장자 - http://ejs.co/
 app.set('views', path.resolve(__dirname, '../pages')); // views 디렉토리 설정 - response.render('경로') 사용
 
-// express 미들웨어 설정
 /*
 -
 express 미들웨어
@@ -71,10 +75,37 @@ app.use((request, response, next) => {
 	next();
 });
 */
-app.use(cors()); // cors 관련 정책
-app.use(express.json()) // for parsing application/json
-app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
+// cors 관련 정책
+app.use(cors()); 
+
+// 쿠키 / 세션
+const COOKIE_SECRET = 'test';
 app.use(cookieParser());
+/*
+express-session 1.5 버전 이전에는 내부적으로 cookie-parser를 사용하고 있어서 cookie-parser 미들웨어보다 뒤에 위치해야 했지만,
+1.5 버전 이후부터는 사용하지 않게 되어 순서가 상관없어졌습니다. 그래도 현재 어떤 버전을 사용하고 있는지 모른다면 
+cookie-parser 미들웨어 뒤에 놓는 것이 안전합니다.
+*/
+app.use(session({  
+	resave: false, // 요청이 올 때 세션에 수정 사항이 생기지 않더라도 세션을 다시 저장할 지 설정
+	saveUninitialized: true, // 세션에 저장할 내역이 없더라도 처음부터 세션을 생성할지 설정하는 것
+	// 세션관리시 클라이언트에 쿠키를 보냅니다.
+	// 안전하게 쿠키를 전송하려면 쿠키에 서명을 추가해야 하고, 쿠키를 서명하는데 secret의 값이 필요합니다.
+	// cookie-parser 의 secret 과 같게 설정하는 것이 좋습니다.
+	secret: COOKIE_SECRET,
+	// cookie 옵션은 세션 쿠키에 대한 설정입니다.
+	// magAge, domain, path, expires, sameSite, httpOnly, secure 등 일반적인 쿠키 없션이 모두 제공됩니다.
+	cookie: {
+		httpOnly: true,
+		secure: false,
+	},
+	// 세션 쿠키의 이름은 name 옵션으로 설정합니다. (기본이름 : connect.sid)
+	name: 'session-cookie',
+	// 기본적으로 메모리에 세션을 저장하도록 되어 있어, 서버를 재시작하면 메모리가 초기화되어 세션이 모두 사라집니다.
+	// 따라서 배포시에는 store에 데이터베이스를 연결하여 세션을 유지하는 것이 좋습니다.
+	//store
+}));
 
 // 고정 경로 설정 (JS, CSS, Images, Files 등 폴더 연결)
 // app.use(express.static('../경로'))) 했을 경우, $ yarn server 을 실행시키는 명령은 root 이므로, root 기준 상대경로가 설정됨
@@ -84,22 +115,43 @@ app.use('/test', express.static(path.resolve(paths.appPath, 'test')));
 app.use(express.static(path.resolve(paths.appPath, 'dist')));
 app.use(express.static(path.resolve(paths.appPath, 'public')));
 
+// bodyParser
+// 익스프레스 4.16.0 버전부터 body-parser 미들웨어의 일부 기능이 익스프레스에 내장
+// 'Failed to load resource: the server responded with a status of 413 (Payload Too Large)' 에러를 해결하기 위해 limit 값을 설정해준다.
+app.use(express.json({ limit: '200mb' })); // parse application/json
+app.use(express.urlencoded({ extended: false, limit: '200mb' })); // parse application/x-www-form-urlencoded
+//app.use(bodyParser.raw()); // 요청의 본문이 버퍼 데이터 일 때
+//app.use(bodyParser.text()); // 요청의 본문이 텍스트 데이터 일 때
+
+// 스트림
+// 스트림을 이용하면 큰 파일을 읽을 때도 메모리를 효율적으로 사용할 수 있다. (readFile 를 이용할 경우 파일의 전체내용을 메모리로 가져오기 때문에 메모리에 여유가 없다면 부담이 될 수 있다.)
+/*app.get('/readFile', (request, response) => {
+	const fileStream = fs.createReadStream('./bog_file.zip');
+	fileStream.pipe(response);
+});*/
+
 // express 전역변수 설정 (response.locals)
 /*app.use(function(request, response, next) {
 	// 전역 데이터 설정 
 	Object.assign(response.locals, webpack);
 	next();
 });*/
+app.use(function(request, response, next) {
+	// 사용자 정보
+	//console.log(request);
+	//request.locals.user = request?.user || '';
+	next();
+});
 
-// redirect HTTP to HTTPS 
+// redirect 
 /*app.all('*', (request, response, next) => { 
+	// HTTP to HTTPS 
 	let protocol = request.headers['x-forwarded-proto'] || request.protocol; 
 	if(protocol == 'https') { 
 		next(); 
 	}else { 
 		let from = `${protocol}://${request.hostname}${request.url}`; 
 		let to = `https://'${request.hostname}${request.url}`; 
-		// log and redirect 
 		console.log(`[${request.method}]: ${from} -> ${to}`); 
 		response.redirect(to); 
 	} 
