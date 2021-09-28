@@ -12,6 +12,13 @@ webpack 빌드 -> 빌드결과(경로, 파일명 등 정보) JSON 생성 -> 리�
 
 > Node.js 정리문서  
 http://makestory.net/media/#/view/475  
+
+> Webpack 정리문서  
+http://makestory.net/media/#/view/454  
+
+> Babel 정리문서  
+http://makestory.net/media/#/view/477  
+https://github.com/make-story/study/blob/master/Babel.md  
   
 > 쉘 스크립트 정리문서  
 http://makestory.net/media/#/view/485  
