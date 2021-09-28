@@ -39,7 +39,7 @@
 		// "moduleResolution": "node", /* 모듈 해석 방법 설정: 'node' (Node.js) 혹은 'classic' (TypeScript pre-1.6). */
 		"baseUrl": ".", /* non-absolute한 모듈 이름을 처리할 기준 디렉토리 */
 		"paths": { /* 'baseUrl'를 기준으로 불러올 모듈의 위치를 재지정하는 엔트리 시리즈 */
-			"@/*": ["src/*"]
+			"@src/*": ["./src/*"]
 		}, 
 		// "rootDirs": [], /* 결합된 컨텐츠가 런타임에서의 프로젝트 구조를 나타내는 루트 폴더들의 목록 */
 		// "typeRoots": [], /* 타입 정의를 포함할 폴더 목록, 설정 안 할 시 기본적으로 ./node_modules/@types로 설정 */
