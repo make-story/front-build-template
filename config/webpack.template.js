@@ -186,19 +186,6 @@ module.exports = {
 					}
 				}
 			},
-			// Svelte
-			/*{
-				test: /\.(html|svelte)$/,
-				exclude: /node_modules/,
-				use: {
-					loader: 'svelte-loader',
-					options: {
-						preprocess: require('svelte-preprocess')({  // npm install -D svelte-preprocess
-							// options
-						})
-					},
-				},
-			},*/
 			// 스타일 관련 
 			{
 				test: /\.scss$/, // npm install --save--dev node-sass style-loader css-loader sass-loader
@@ -264,12 +251,7 @@ module.exports = {
 		path: path.resolve(__dirname, `../dist`), 
 		
 		// 파일들이 위치할 서버 상의 경로 
-		// publicPath 는 배포 빌드 할 때 Webpack plugins(ulr-loader,file-loader 같은..), CSS나 HTML파일 안에 URL들을 업데이트 해주기 위한 것(prefix개념) 
-		// devServer (개발모드)를 사용할 경우(HtmlWebpackPlugin 함께 사용하는 경우) devServer.contentBase 도 함께 변경해줘야 한다. 
-		// 자바스크립트 내부 코드에서 dynamic import 를 사용하는 경우, publicPath 를 활용하여 리소스 url을 지정해 줄 수 있다.
-		//publicPath: '/dist/webpack/',
-		//publicPath: `/${env.active}/${env.build}/`,
-		publicPath: `/`,
+		publicPath: `./`,
 
 		// [name]은 entry 에 설정된 ‘key’ 이름 - entry name
 		// [id] 웹팩 내부적으로 사용하는 모듈 ID - chunk id
