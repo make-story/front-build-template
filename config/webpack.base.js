@@ -230,15 +230,11 @@ module.exports = {
 				}
 			},
 			{
-				test: /\.ejs$/,
+				test: /\.ejs$/, 
 				exclude: /node_modules/, // 제외
 				use: {
-					loader: "ejs-loader", // npm install --save ejs-loader ejs-webpack-loader
-					options: {
-						//variable: 'data',
-						//interpolate : '\\{\\{(.+?)\\}\\}',
-						//evaluate : '\\[\\[(.+?)\\]\\]'
-					},
+					loader: "ejs-compiled-loader", // ejs-loader 은 <%-include ... %> 작동안함, ejs-compiled-loader 사용
+					options: {},
 				}
 			},
 			// 자바스크립트 관련 (트랜스파일러 등)
