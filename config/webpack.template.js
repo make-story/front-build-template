@@ -169,7 +169,6 @@ module.exports = {
 						// @babel/preset-env도 공식 프리셋의 하나이며 필요한 플러그인 들을 프로젝트 지원 환경에 맞춰서 동적으로 결정해 준다.
 						//presets: ['@babel/preset-env'] 
 						presets: [
-							//"@babel/preset-typescript",
 							[
 								"@babel/preset-env", 
 								{
@@ -260,7 +259,6 @@ module.exports = {
 		// [chunkhash]는 파일이 달라질 때에만 랜덤 값이 바뀝니다. (이것을 사용하면 변경되지 않은 파일들은 계속 캐싱하고 변경된 파일만 새로 불러올 수 있습니다.)
 		//filename: '[name].bundle.js',
 		filename: '[name]/[name].[hash].js',
-		//filename: `[name]/[name].${getDatetime()}.js`,
 		chunkFilename: '[name]/[id].[chunkhash].js',
 
 		// 빌드 결과물을 라이브러리 형태로 외부에서 사용가능하도록 설정 (externals 설정과 연동)
