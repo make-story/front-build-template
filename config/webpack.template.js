@@ -6,6 +6,7 @@ const webpack = require('webpack');
 // webpack plugin 
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // dev server 사용시 test html 생성
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 // 웹팩 설정 
 module.exports = {
@@ -49,7 +50,7 @@ module.exports = {
 		// ProvidePlugin 연동
 		// 타입스크립트 환경에서 해당 설정을 사용할 경우, tsconfig 에도 같은 설정을 해줘야 함 (baseUrl, paths)
 		alias: {
-			'@src': path.resolve(__dirname, '../src'), // import '@/components/button';
+			'@src': path.resolve(__dirname, '../src'), // import '@/src/파일경로';
 		},
 
 		// 활성화되면 심볼릭 링크 된 리소스는 심볼릭 링크 된 위치가 아닌 실제 경로 로 확인
@@ -80,51 +81,7 @@ module.exports = {
 		rules: [
 			// 템플릿 관련 
 			{
-				test: /\.handlebars$/, 
-				loader: "handlebars-loader", // npm install --save handlebars-loader
-				//loader: "handlebars-loader?runtime=handlebars/runtime", 
-				//loader: "handlebars-template-loader", // npm install --save handlebars-template-loader
-				options: {
-					// 런타임 라이브러리의 경로
-					//runtime: 'handlebars',
-					// 확장자명 (기본값 .handlebars, .hbs)
-					//extensions : '',
-					// 디버그
-					debug: true,
-					// https://handlebarsjs.com/api-reference/compilation.html#handlebars-compile-template-options
-					precompileOptions: {
-						knownHelpersOnly: false
-					},
-					//
-					//ignorePartials: true,
-					//ignoreHelpers: true,
-					//partialDirs: [],
-					helperDirs: [
-						// handlebars 기본 제공 헬퍼 외 사용자가 등록한 추가 헬퍼들이 있는 경로 (기본적으로 handlebars-loader 는 .handlebars 템플릿이 있는 경로에서 템플릿에서 사용된 .js 헬퍼 파일을 검색한다.)
-						path.resolve(__dirname, "../src/helper")
-					], 
-					/*partialResolver: function(partial, callback) {
-						console.log('partialResolver');
-						console.log('partial', partial);
-						console.log('callback', callback);
-						callback();
-					},*/
-					/*helperResolver: (helper, callback) => {
-						console.log('helperResolver');
-						console.log('helper', helper);
-						console.log('callback', callback);
-						switch(helper) {
-							case 'date':
-								//callback(null, path.resolve('node_modules/helper-date'));
-								break;
-							default:
-								callback();
-						}
-					},*/
-				}
-			},
-			{
-				test: /\.ejs$/, // https://github.com/difelice/ejs-loader
+				test: /\.ejs$/, 
 				exclude: /node_modules/, // 제외
 				use: {
 					loader: "ejs-compiled-loader", // ejs-loader 은 <%-include ... %> 작동안함, ejs-compiled-loader 사용
@@ -281,21 +238,24 @@ module.exports = {
 	// 웹팩4 에서는 ModuleConcatenationPlugin, UglifyJsPlugin, NoEmitOnErrorsPlugin, NamedModules 플러그인이 모두 사라지고 optimization 속성(속성내부 설정)으로 대치
 	// 웹팩3 에서 DedupePlugin (중복 종속 제거) 은 사라졌고, OccurrenceOrderPlugin (청크 [id]를 생성하기 위한 플러그인)은 기본으로 설정되어 있음
 	plugins: [
+		// 빌드 폴더 내 파일을 제거/정리
+		new CleanWebpackPlugin(),
+
 		// 번들링한 결과물에서 css파일을 따로 추출
 		new MiniCssExtractPlugin({
-			// 개발모드 
-			//filename: '[name].css',
-			//chunkFilename: '[id].css',
-			// 운영모드
 			filename: '[name]/[name].[hash].css',
 			chunkFilename: '[name]/[id].[hash].css',
 		}),
 
 		// html 생성
         new HtmlWebpackPlugin({
-            title: 'Template',
+			title: 'Template',
             filename: 'index.html',
-            template: path.resolve(__dirname, '../pages/template.ejs')
+            template: path.resolve(__dirname, '../pages/template.ejs'),
+			inject: 'body', // true || 'head' || 'body' || false
+			publicPath: 'auto',
+            scriptLoading: 'blocking', // 'blocking' || 'defer'
+			cache: true, // 변경된 경우에만 파일을 내보냅니다.
         }),
 	],
 };
