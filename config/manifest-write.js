@@ -1,4 +1,6 @@
-// 모듈
+/**
+ * manifest (빌드 결과물 정보) 파일 생성
+ */
 const path = require('path'); 
 const fs = require('fs');
 const mkdir = require('mkdirp'); // 폴더생성 모듈 (하위 폴더까지 생성)

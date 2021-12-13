@@ -1,3 +1,6 @@
+/**
+ * manifest (빌드 결과물 정보) 기반 html tag 생성
+ */
 const path = require('path'); 
 const fs = require('fs');
 

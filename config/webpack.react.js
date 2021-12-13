@@ -1,4 +1,6 @@
-// 모듈
+/**
+ * webpack 빌드 리액트
+ */
 const path = require('path'); 
 
 module.exports = {

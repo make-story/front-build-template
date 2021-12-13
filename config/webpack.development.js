@@ -1,4 +1,6 @@
-// 모듈
+/**
+ * webpack 빌드 개발모드
+ */
 const path = require('path'); 
 const fs = require('fs');
 //const glob = require("glob");

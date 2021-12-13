@@ -1,8 +1,8 @@
+/**
+ * webpack 빌드 필수 설정
+ * 기본적인 module loader 를 처리하는 rules 등이나 plugin 등은 base 에서 처리
+ */
 /*
-기본적인 module loader를 처리하는 rules 등이나 plugin 등은 base.js에서 처리하고, 
-development.js에서는 개발에서만 사용하는 부분들을, 
-production.js 에서는 배포용에서 사용하는 옵션들을 설정
-
 -
 모듈화
 ES2015의 import

@@ -1,4 +1,6 @@
-// Node.js 환경에서 사용하기 위한 모듈 빌드
+/**
+ * Node.js 환경에서 사용하기 위한 모듈 빌드
+ */
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 

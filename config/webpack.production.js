@@ -1,4 +1,6 @@
-// 모듈
+/**
+ * webpack 빌드 운영모드
+ */
 const path = require('path'); 
 const fs = require('fs');
 //const glob = require("glob"); // /**/*.js 형태 사용

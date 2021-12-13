@@ -1,3 +1,6 @@
+/**
+ * manifest (빌드 결과물 정보) read
+ */
 const path = require('path'); 
 const fs = require('fs');
 

@@ -1,4 +1,6 @@
-// 모듈
+/**
+ * webpack 빌드 타입스크립트
+ */
 const path = require('path'); 
 
 module.exports = {
