@@ -1,5 +1,5 @@
 /**
- * manifest (빌드 결과물 정보) read
+ * manifest (빌드 결과물 정보) 파일 읽기
  */
 const path = require('path'); 
 const fs = require('fs');
