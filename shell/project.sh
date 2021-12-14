@@ -2,7 +2,7 @@
 
 # 젠킨스를 통한 GIT 버전관리 프로젝트 생성 쉘스크립트
 # $ project.sh <프로젝트명>
-ROOT_PATH="/Users/sung-minyu/Development/github/webpagetest.git/shell"
+ROOT_PATH="/Users/sung-minyu/Development/github"
 PROJECT_NAME=$1
 
 cd $ROOT_PATH;
@@ -39,6 +39,7 @@ if [ -n "$PROJECT_NAME" ] && [ ! -d "$PROJECT_NAME" ] && [ ! -d "$PROJECT_NAME".
     # 원격저장소 설정 (Git 커밋 파일이 실제 적용될 곳 연결)
     if [ -d "$PROJECT_NAME" ];
         then
+        # master 브랜치 반영 폴더 생성
         echo "$PROJECT_NAME" master remote 
         cd "$PROJECT_NAME"
         git remote add orign ../"$PROJECT_NAME".git
@@ -47,6 +48,7 @@ if [ -n "$PROJECT_NAME" ] && [ ! -d "$PROJECT_NAME" ] && [ ! -d "$PROJECT_NAME".
     fi
     if [ -d "$PROJECT_NAME".test ];
         then
+        # develop 브랜치 반영 폴더 생성
         echo "$PROJECT_NAME".test develop remote
         cd "$PROJECT_NAME".test
         git remote add orign ../"$PROJECT_NAME".git
