@@ -16,6 +16,7 @@ which node
 # whereis는 명령어의 실행파일위치, 소스위치, man 페이지파일의 위치를 찾아주는 명령어
 #whereis node
 
+# $1, $2 사용자 입력값 존재여부 확인
 if [ -n "$1" ] && [ -n "$2" ];
 	then
 
@@ -33,11 +34,15 @@ if [ -n "$1" ] && [ -n "$2" ];
 		echo "Git 브랜치 조건확인이 필요합니다."
 		exit;
 	fi
-
-	# "build"
-	cd $PROJECT_PATH;
-	./node_modules/.bin/webpack --config ./webpack.config.js --mode production
 	
+	# "build"
+	# 파일이나 디렉토리 존재여부 확인
+	if [ ! -e "$PROJECT_PATH" ] ; 
+		then
+		cd $PROJECT_PATH;
+		./node_modules/.bin/webpack --config ./webpack.config.js --mode production
+	fi
+
 	unset BUILD_NUMBER
 else 
 	echo "설정값 확인이 필요합니다."
