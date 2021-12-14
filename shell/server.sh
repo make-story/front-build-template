@@ -68,6 +68,9 @@ if [ -n "$1" ];
     echo "$SOCKET_NAME Start!"
     $PROJECT_PATH/node_modules/pm2/bin/pm2 start $PROJECT_PATH/servers/websocket.js --name "$SOCKET_NAME"
     unset BUILD_NUMBER
+
+    # pm2 list 확인
+    $PROJECT_PATH/node_modules/pm2/bin/pm2 list
 else 
     echo "설정값 확인이 필요합니다."
 fi
