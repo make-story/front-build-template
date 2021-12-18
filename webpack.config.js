@@ -16,13 +16,16 @@ const CircularDependencyPlugin = require('circular-dependency-plugin'); // 순�
 //const CopyPlugin = require('copy-webpack-plugin'); // 개별 파일 또는 전체 디렉토리를 빌드 디렉토리에 복사
 
 // webpack config (웹팩설정 정보)
-const configEntry = require(path.resolve(__dirname, './config/webpack.entry.js')); // 기본 엔트리
-const configBase = require(path.resolve(__dirname, './config/webpack.base.js')); // 공통설정 (기본 프로젝트)
-const configProduction = require(path.resolve(__dirname, './config/webpack.production.js')); // 웹팩 배포용 설정 
+const configBase = require(path.resolve(__dirname, './config/webpack.base.js')); // 기본설정 (기본 프로젝트)
+const configNone = require(path.resolve(__dirname, './config/webpack.none.js')); // 웹팩 개발모드 설정 
 const configDevelopment = require(path.resolve(__dirname, './config/webpack.development.js')); // 웹팩 개발모드 설정 
+const configProduction = require(path.resolve(__dirname, './config/webpack.production.js')); // 웹팩 배포용 설정 
+const configStyle = require(path.resolve(__dirname, './config/webpack.style.js')); // 스타일 관련
 const configTemplate = require(path.resolve(__dirname, "./config/webpack.template.js")); // 템플릿 설정 관련
 const configReact = require(path.resolve(__dirname, './config/webpack.react.js')); // 리액트 프로젝트 
 const configTypeScript = require(path.resolve(__dirname, './config/webpack.typescript.js')); // 타입스크립트 프로젝트 
+const configReactTypeScript = require(path.resolve(__dirname, './config/webpack.react-typescript.js')); // 리액트 + 타입스크립트 프로젝트 
+const configVue = require(path.resolve(__dirname, './config/webpack.vue.js')); // 리액트 프로젝트 
 
 /*
 -
@@ -76,6 +79,9 @@ let setDevelopment = (config={}) => {
 
 // 개발환경에 따른 output 변경 
 let setOutput = (config={}) => {
+	if(!config.output) {
+		return config;
+	}
 	// config.output 값 변경 
 	switch(env.active) {
 		case env.phase.local:
@@ -101,6 +107,9 @@ let setOutput = (config={}) => {
 
 // 필수 플러그인 관련 설정 
 let setPlugins = (config={}) => {
+	if(config.mode !== 'production') {
+		return config;
+	}
 	const plugins = [];
 
 	// 순환 improt 검사
@@ -129,176 +138,174 @@ let setPlugins = (config={}) => {
 		})
 	);
 
-	if(config.mode !== 'development') {
-		// 빌드 결과 정보가 들어있는 json 생성
-		/*plugins.push(
-			new WebpackAssetsManifest({
-				//publicPath: '',
-				merge: true, // true/false/customize
-				// entrypoints 매니페스트 파일에 포함 
-				entrypoints: true,
-				// 설정이 완료된 후 실행할 콜백
-				apply: function(manifest) {
-					// console.log('apply');
-					// console.log('arguments', arguments);
-				},
-				// 매니페스트의 각 항목을 사용자 정의하기위한 콜백
-				customize: function(entry, original, manifest, asset) {
-					// console.log('customize');
-					// console.log('arguments', arguments);
-				},
-				// 전체 매니페스트를 변환하기위한 콜백
-				transform: function(assets, manifest) {
-					// console.log('transform');
-					// console.log('arguments', arguments);
-					let date = new Date();
-					return {
-						tool: 'webpack',
-						time: [
-							[date.getFullYear(), Number(date.getMonth())+1, date.getDate()].join('.'), // 년.월.일
-							[date.getHours(), date.getMinutes(), date.getSeconds()].join(':'), // 시:분:초
-							date.getMilliseconds() // 밀리초
-						].join(' '),
-						entrypoints: assets.entrypoints,
-					};
-				},
-				// json replacer
-				replacer: function(key, value) {
-					// console.log('replacer');
-					// console.log('arguments', arguments);
-					if(key === 'entrypoints') {
+	// 빌드 결과 정보가 들어있는 json 생성
+	/*plugins.push(
+		new WebpackAssetsManifest({
+			//publicPath: '',
+			merge: true, // true/false/customize
+			// entrypoints 매니페스트 파일에 포함 
+			entrypoints: true,
+			// 설정이 완료된 후 실행할 콜백
+			apply: function(manifest) {
+				// console.log('apply');
+				// console.log('arguments', arguments);
+			},
+			// 매니페스트의 각 항목을 사용자 정의하기위한 콜백
+			customize: function(entry, original, manifest, asset) {
+				// console.log('customize');
+				// console.log('arguments', arguments);
+			},
+			// 전체 매니페스트를 변환하기위한 콜백
+			transform: function(assets, manifest) {
+				// console.log('transform');
+				// console.log('arguments', arguments);
+				let date = new Date();
+				return {
+					tool: 'webpack',
+					time: [
+						[date.getFullYear(), Number(date.getMonth())+1, date.getDate()].join('.'), // 년.월.일
+						[date.getHours(), date.getMinutes(), date.getSeconds()].join(':'), // 시:분:초
+						date.getMilliseconds() // 밀리초
+					].join(' '),
+					entrypoints: assets.entrypoints,
+				};
+			},
+			// json replacer
+			replacer: function(key, value) {
+				// console.log('replacer');
+				// console.log('arguments', arguments);
+				if(key === 'entrypoints') {
 
-					}
-					return value;
-				},
-				// 컴파일이 완료되고 매니페스트가 작성된 후 실행할 콜백
-				done: function(manifest, stats) {
-					// console.log('done');
-					// console.log('arguments', arguments);
-				},
-				// options: function(options) {
-				// 	// console.log('options');
-				// },
-				// afterOptions: function(options) {
-				// 	// console.log('afterOptions');
-				// },
-			})
-		);*/
-		plugins.push(
-			new ManifestPlugin({
-			//new WebpackManifestPlugin({
-				// 파일명 - manifest.json
-				//fileName: `${env.active}.${env.build}.json`, 
-				// 경로의 기본 경로 (기본값: output.publicPath)
-				//publicPath: '',
-				// 경로에 추가되는 경로
-				//basePath: '/', 
-				// 정보 추가
-				/*seed: { 
-					'active': env.active,
-					'build': env.build,
-				},*/
-				// 필터 
-				filter: function(FileDescriptor) {
-					//console.log('filter');
-					//console.log('FileDescriptor', FileDescriptor);
-					//FileDescriptor { path: string, name: string | null, isInitial: boolean, isChunk: boolean, chunk?: Chunk, isAsset: boolean, isModuleAsset: boolean }
-					//return FileDescriptor; // 기본 출력 
-
-					if(FileDescriptor.isInitial && !FileDescriptor.name.endsWith('.map')) {
-						return FileDescriptor;
-					}
-				},
-				// 매니페스트를 만들기전 세부 사항 수정 
-				map: function(FileDescriptor) { 
-					//console.log('map');
-					//console.log('FileDescriptor', FileDescriptor);
-					//FileDescriptor { path: string, name: string | null, isInitial: boolean, isChunk: boolean, chunk?: Chunk, isAsset: boolean, isModuleAsset: boolean }
-					//return FileDescriptor; // 기본 출력 
-					return FileDescriptor;
-				},
-				// 매니페스트를 구조 변경
-				// entry 단위
-				generate: function(seed, files, entrypoints) {
-					//console.log('generate');
-					//console.log('seed', seed); // seed: {} 추가된 정보 
-					//console.log('files', files); // [{path: 'page1/page1.2020111-232650.js', chunk: Chunk, name: '', ...}, {...}, ...]
-					//console.log('entrypoints', entrypoints); // {page1: ['...', ...], page2: ...}
-
-					// filter - 매니페스트에 포함될 파일만 분류 
-					let manifestFiles = files.reduce((manifest/*콜백의 반환값을 누적*/, file/*현재 요소*/) => {
-						// file.path: 'page1/page1.2020111-23516.js'
-						// file.name: 'page1.js'
-						// file.chunk
-						// file.isInitial, file.isChunk, file.isAsset, file.isModuleAsset
-						manifest[file.name] = file.path;
-						return manifest;
-					}, {});
-
-					// 파일 단위, 확장자 단위 별로 분리 
-					let entrypointFiles = {};
-					let entrypointTypes = {};
-					Object.keys(entrypoints).forEach(entry => {
-						// entry: page1
-						// entrypoints[entry]: [ 'vendors~page1/vendors~page1.2020111-23516.js', 'page1/page1.2020111-23516.js' ]
-
-						// 리소스 타입별로 구분 
-						let types = {
-							/*'ico': [],
-							'json': [],
-							'css': [],
-							'js': [],*/
-						};
-
-						// 필터 (제외할 파일 종류)
-						entrypointFiles[entry] = entrypoints[entry].filter(
-							fileName => !fileName.endsWith('.map')
-						);
-
-						// 확장자 별로 분류 
-						entrypointFiles[entry].forEach(file => {
-							//console.log('file', file); // react/react.2020118-22463.js
-							//console.log('extname', path.extname(file)); // .js
-							let extname = path.extname(file).replace('.', '');
-							if(!Array.isArray(types[extname])) {
-								types[extname] = [];
-							}
-							types[extname].push(file);
-						});
-						entrypointTypes[entry] = types;
-					});
-
-					// 엔트리 단위 매니페스트 파일 생성 
-					manifestWrite.webpack(entrypointTypes);
-
-					//console.log(manifestFiles);
-					//console.log(entrypointFiles);
-					//console.log(entrypointTypes);
-
-					// serialize 함수로 아래 return 값 파라미터로 전달
-					return {
-						//time: getDatetime(),
-						//seed: seed,
-						active: env.active,
-						build: env.build,
-						path: PATHS.PUBLIC,
-						entry: entrypointTypes,
-						file: manifestFiles,
-					};
-				},
-				// 만들어진 매니페스트를 수정
-				// entry 결과물
-				serialize: function(manifest) {
-					//console.log('serialize', manifest);
-					//return JSON.stringify(manifest, null, 2); // 기본 출력
-
-					// 최종 manifest.json 파일 내부 결과값 
-					//console.log('[webpack] manifest', manifest);
-					return JSON.stringify(manifest, null, 2); // 매니페스트 파일에 쓰기 
 				}
-			})
-		)
-	}
+				return value;
+			},
+			// 컴파일이 완료되고 매니페스트가 작성된 후 실행할 콜백
+			done: function(manifest, stats) {
+				// console.log('done');
+				// console.log('arguments', arguments);
+			},
+			// options: function(options) {
+			// 	// console.log('options');
+			// },
+			// afterOptions: function(options) {
+			// 	// console.log('afterOptions');
+			// },
+		})
+	);*/
+	plugins.push(
+		new ManifestPlugin({
+		//new WebpackManifestPlugin({
+			// 파일명 - manifest.json
+			//fileName: `${env.active}.${env.build}.json`, 
+			// 경로의 기본 경로 (기본값: output.publicPath)
+			//publicPath: '',
+			// 경로에 추가되는 경로
+			//basePath: '/', 
+			// 정보 추가
+			/*seed: { 
+				'active': env.active,
+				'build': env.build,
+			},*/
+			// 필터 
+			filter: function(FileDescriptor) {
+				//console.log('filter');
+				//console.log('FileDescriptor', FileDescriptor);
+				//FileDescriptor { path: string, name: string | null, isInitial: boolean, isChunk: boolean, chunk?: Chunk, isAsset: boolean, isModuleAsset: boolean }
+				//return FileDescriptor; // 기본 출력 
+
+				if(FileDescriptor.isInitial && !FileDescriptor.name.endsWith('.map')) {
+					return FileDescriptor;
+				}
+			},
+			// 매니페스트를 만들기전 세부 사항 수정 
+			map: function(FileDescriptor) { 
+				//console.log('map');
+				//console.log('FileDescriptor', FileDescriptor);
+				//FileDescriptor { path: string, name: string | null, isInitial: boolean, isChunk: boolean, chunk?: Chunk, isAsset: boolean, isModuleAsset: boolean }
+				//return FileDescriptor; // 기본 출력 
+				return FileDescriptor;
+			},
+			// 매니페스트를 구조 변경
+			// entry 단위
+			generate: function(seed, files, entrypoints) {
+				//console.log('generate');
+				//console.log('seed', seed); // seed: {} 추가된 정보 
+				//console.log('files', files); // [{path: 'page1/page1.2020111-232650.js', chunk: Chunk, name: '', ...}, {...}, ...]
+				//console.log('entrypoints', entrypoints); // {page1: ['...', ...], page2: ...}
+
+				// filter - 매니페스트에 포함될 파일만 분류 
+				let manifestFiles = files.reduce((manifest/*콜백의 반환값을 누적*/, file/*현재 요소*/) => {
+					// file.path: 'page1/page1.2020111-23516.js'
+					// file.name: 'page1.js'
+					// file.chunk
+					// file.isInitial, file.isChunk, file.isAsset, file.isModuleAsset
+					manifest[file.name] = file.path;
+					return manifest;
+				}, {});
+
+				// 파일 단위, 확장자 단위 별로 분리 
+				let entrypointFiles = {};
+				let entrypointTypes = {};
+				Object.keys(entrypoints).forEach(entry => {
+					// entry: page1
+					// entrypoints[entry]: [ 'vendors~page1/vendors~page1.2020111-23516.js', 'page1/page1.2020111-23516.js' ]
+
+					// 리소스 타입별로 구분 
+					let types = {
+						/*'ico': [],
+						'json': [],
+						'css': [],
+						'js': [],*/
+					};
+
+					// 필터 (제외할 파일 종류)
+					entrypointFiles[entry] = entrypoints[entry].filter(
+						fileName => !fileName.endsWith('.map')
+					);
+
+					// 확장자 별로 분류 
+					entrypointFiles[entry].forEach(file => {
+						//console.log('file', file); // react/react.2020118-22463.js
+						//console.log('extname', path.extname(file)); // .js
+						let extname = path.extname(file).replace('.', '');
+						if(!Array.isArray(types[extname])) {
+							types[extname] = [];
+						}
+						types[extname].push(file);
+					});
+					entrypointTypes[entry] = types;
+				});
+
+				// 엔트리 단위 매니페스트 파일 생성 
+				manifestWrite.webpack(entrypointTypes);
+
+				//console.log(manifestFiles);
+				//console.log(entrypointFiles);
+				//console.log(entrypointTypes);
+
+				// serialize 함수로 아래 return 값 파라미터로 전달
+				return {
+					//time: getDatetime(),
+					//seed: seed,
+					active: env.active,
+					build: env.build,
+					path: PATHS.PUBLIC,
+					entry: entrypointTypes,
+					file: manifestFiles,
+				};
+			},
+			// 만들어진 매니페스트를 수정
+			// entry 결과물
+			serialize: function(manifest) {
+				//console.log('serialize', manifest);
+				//return JSON.stringify(manifest, null, 2); // 기본 출력
+
+				// 최종 manifest.json 파일 내부 결과값 
+				//console.log('[webpack] manifest', manifest);
+				return JSON.stringify(manifest, null, 2); // 매니페스트 파일에 쓰기 
+			}
+		})
+	);
 
 	config = webpackMerge(config, { plugins, });
 	//config = merge(config, { plugins, });
@@ -349,10 +356,10 @@ module.exports = (environment, argv) => {
 
 	// 웹팩 기본 설정 mode: 'none' | 'development' | 'production'
 	console.log('[webpack] mode', mode);
-	config = webpackMerge(config, configEntry, configBase);
+	config = webpackMerge(config, configBase, configStyle);
 	switch(mode) {
 		case 'none':
-			
+			config = webpackMerge(config, configNone); 
 			break;
 		case 'development':
 			config = webpackMerge(config, configDevelopment); 
@@ -377,8 +384,11 @@ module.exports = (environment, argv) => {
 			config = webpackMerge(config, configTypeScript); 
 			//config = Object.assign({}, config, configTypeScript);
 			break;
+		case 'react-typescript':
+			config = webpackMerge(config, configReactTypeScript); 
+			break;
 		case 'vue':
-			//config = webpackMerge(config, configVue);
+			config = webpackMerge(config, configVue);
 			//config = merge(config, configVue);
 			break;
 		case 'ec':
@@ -390,7 +400,7 @@ module.exports = (environment, argv) => {
 			//config = configEC;
 			break;
 		case 'template':
-			config = webpackMerge(config, configTemplate); 
+			config = webpackMerge(configNone, configTemplate); 
 			//config = Object.assign({}, config, configTypeScript);
 			break;
 	}

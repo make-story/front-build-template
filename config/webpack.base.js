@@ -1,5 +1,5 @@
 /**
- * webpack 빌드 필수 설정
+ * webpack 빌드 필수 설정 (mode: none, development, production 공통)
  * 기본적인 module loader 를 처리하는 rules 등이나 plugin 등은 base 에서 처리
  */
 /*
@@ -74,12 +74,6 @@ let getDatetime = () => {
 	].join('-');
 };
 
-// style files regexes
-const cssRegex = /\.css$/;
-const cssModuleRegex = /\.module\.css$/;
-const sassRegex = /\.(scss|sass)$/;
-const sassModuleRegex = /\.module\.(scss|sass)$/;
-
 // 웹팩 설정 
 module.exports = {
 	// webpack mode: 'none' | 'development' | 'production'
@@ -104,14 +98,13 @@ module.exports = {
 	// 웹팩이 파일을 읽어들이기 시작하는 부분
 	// 서로간 의존성이 없는 여러개의 파일을 사용하고 싶다면 Array 형식으로 사용 
 	// 여러 entry 를 사용(여러 페이지)한다면 Object 
-	//entry: {
+	entry: {
 		// IE 환경에서 최신 자바스크립트를 사용해 개발하고 싶다면 두 폴리필을 npm에서 다운 받은 후 저렇게 모든 엔트리에 넣어주셔야 합니다. ('@babel/polyfill', 'eventsource-polyfill')
 		//'test': ['@babel/polyfill', 'eventsource-polyfill', 'src/javascript/entry.js'],
 		//'module2': 'src/javascript/module2.js',
 		//'circular': 'src/javascript/index.js', // 순환 종속 테스트 
-		//'index': ['src/typescript/index.ts', 'src/scss/index.scss', 'src/css/style.css',],
-		//'entry': 'src/javascript/entry.js',
-	//},
+		'test': 'src/javascript/entry.js',
+	},
 
 	// 경로나 확장자를 처리할 수 있게 도와주는 옵션
 	// 모듈로딩 관련 옵션 설정, 모듈 해석방식 정의 (alias등)
@@ -183,60 +176,6 @@ module.exports = {
 		]*/
 		// 웹팩2 이상 
 		rules: [
-			// 템플릿 관련 
-			{
-				test: /\.handlebars$/, 
-				loader: "handlebars-loader", // npm install --save handlebars-loader
-				//loader: "handlebars-loader?runtime=handlebars/runtime", 
-				//loader: "handlebars-template-loader", // npm install --save handlebars-template-loader
-				//loader: "cjos-handlebars-loader"
-				options: {
-					// 런타임 라이브러리의 경로
-					//runtime: 'handlebars',
-					// 확장자명 (기본값 .handlebars, .hbs)
-					//extensions : '',
-					// 디버그
-					debug: true,
-					// https://handlebarsjs.com/api-reference/compilation.html#handlebars-compile-template-options
-					precompileOptions: {
-						knownHelpersOnly: false
-					},
-					//
-					//ignorePartials: true,
-					//ignoreHelpers: true,
-					//partialDirs: [],
-					helperDirs: [
-						// handlebars 기본 제공 헬퍼 외 사용자가 등록한 추가 헬퍼들이 있는 경로 (기본적으로 handlebars-loader 는 .handlebars 템플릿이 있는 경로에서 템플릿에서 사용된 .js 헬퍼 파일을 검색한다.)
-						path.resolve(__dirname, "../src/helper")
-					], 
-					/*partialResolver: function(partial, callback) {
-						console.log('partialResolver');
-						console.log('partial', partial);
-						console.log('callback', callback);
-						callback();
-					},*/
-					/*helperResolver: (helper, callback) => {
-						console.log('helperResolver');
-						console.log('helper', helper);
-						console.log('callback', callback);
-						switch(helper) {
-							case 'date':
-								//callback(null, path.resolve('node_modules/helper-date'));
-								break;
-							default:
-								callback();
-						}
-					},*/
-				}
-			},
-			{
-				test: /\.ejs$/, 
-				exclude: /node_modules/, // 제외
-				use: {
-					loader: "ejs-compiled-loader", // ejs-loader 은 <%-include ... %> 작동안함, ejs-compiled-loader 사용
-					options: {},
-				}
-			},
 			// 자바스크립트 관련 (트랜스파일러 등)
 			/*{
 				test: /\.js$/,
@@ -295,95 +234,6 @@ module.exports = {
 						},
 					}*/
 				]
-			},
-			// Typescript
-			// https://github.com/TypeStrong/ts-loader
-			{
-				test: /\.(ts|tsx)$/, // TypeScript 를 사용 할때는 .ts (리액트 컴포넌트의 경우에는 .tsx) 확장자를 사용
-				exclude: /node_modules/,
-				use: [
-					{
-						loader: 'ts-loader',
-						options: {
-							transpileOnly: true
-						}
-					},
-				],
-			},
-			// Vue
-			// https://vue-loader.vuejs.org/
-			{
-				test: /\.vue$/,
-				exclude: /node_modules/,
-				use: {
-					loader: 'vue-loader',
-				},
-			},
-			// Svelte
-			/*{
-				test: /\.(html|svelte)$/,
-				exclude: /node_modules/,
-				use: {
-					loader: 'svelte-loader',
-					options: {
-						preprocess: require('svelte-preprocess')({  // npm install -D svelte-preprocess
-							// options
-						})
-					},
-				},
-			},*/
-			// 스타일 관련 
-			{
-				test: /\.scss$/, // npm install --save--dev node-sass style-loader css-loader sass-loader
-				//include: path.join(__dirname),
-				exclude: /node_modules/,
-				use: [
-					// 배열의 마지막 로더부터 실행된다.
-					//"style-loader", // Creates `style` nodes from JS strings
-					//(process.env.NODE_ENV || process.env.ACTIVE) !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader, // MiniCssExtractPlugin
-					MiniCssExtractPlugin.loader,
-					"css-loader", // Translates CSS into CommonJS
-					{
-						loader: "sass-loader", // Compiles Sass to CSS
-						/*sourceMap: true,
-            			sassOptions: {
-							outputStyle: 'compressed',
-						},*/
-					}
-				]
-			},
-			// CSS 관련 로더
-			{
-				test: /\.css$/,
-				include: /\.module\.css$/, // CSS 모듈 전용 - 파일명.module.css 규칙 파일
-				use: [
-					// 배열의 마지막 로더부터 실행된다.
-					'style-loader',
-					'vue-style-loader',
-					{
-						loader: 'css-loader',
-						options: {
-							importLoaders: 1,
-							modules: true
-						}
-					}
-				],
-			},
-			// CSS 외부 파일로 생성 - CSS 위 로더 실행 후 실행
-			{
-				test: /\.css$/,
-				exclude: /\.module\.css$/, // 제외할 폴더나 파일
-				use: [
-					// 배열의 마지막 로더부터 실행된다.
-					MiniCssExtractPlugin.loader,
-					{
-						loader: 'css-loader',
-						/*options: {
-							modules: true,
-							localIdentName: "[name]__[local]"
-						},*/
-					}
-				],
 			},
 		]
 	},
