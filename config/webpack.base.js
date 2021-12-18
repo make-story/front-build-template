@@ -114,12 +114,12 @@ module.exports = {
 		modules: [
 			// 'node_modules' 경로 필수
 			// 참고: path.resolve 상대경로를 절대경로로 변경
-			path.resolve(paths.appPath, 'node_modules'),
-			path.resolve(paths.appPath, 'src'),
-			path.resolve(paths.appPath, '.'),
-			//path.resolve(__dirname, 'node_modules'), 
-			//path.resolve(__dirname, 'src'),
-			//path.resolve(__dirname, '.'),
+			//path.resolve(paths.appPath, 'node_modules'),
+			//path.resolve(paths.appPath, 'src'),
+			//path.resolve(paths.appPath, '.'),
+			path.resolve(__dirname, '../node_modules'), 
+			path.resolve(__dirname, '../src'),
+			path.resolve(__dirname, '../.'),
 		],
 
 		// 탐색할 모듈의 확장자를 지정  
