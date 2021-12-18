@@ -11,7 +11,7 @@
     "test": "source ./env/test.env; npm-run-all build --parallel server",
     "stage": "source ./env/stage.env; npm-run-all build --parallel server",
     "production": "source ./env/production.env; npm-run-all build --parallel server",
-    "build": "webpack --config ./webpack.config.js --mode production",
+    "webpack-build": "webpack --config ./webpack.config.js --mode production",
     "webpack-node": "webpack --config ./config/webpack.node.js --mode production",
     "webpack-watch": "webpack --config ./webpack.config.js --watch",
     "webpack-dev-server": "webpack-dev-server --config webpack.config.js --progress --mode development",
