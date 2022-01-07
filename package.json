@@ -28,7 +28,7 @@
     "server-show": "./node_modules/pm2/bin/pm2 show main",
     "server-log": "./node_modules/pm2/bin/pm2 log",
     "server-test": "./node_modules/pm2/bin/pm2 start ./servers/main.js --watch --ignore-watch='dist data' --no-daemon",
-    "server-watch": "./node_modules/pm2/bin/pm2 start ./servers/main.js --watch dist &&  && ./node_modules/pm2/bin/pm2 log",
+    "server-watch": "./node_modules/pm2/bin/pm2 start ./servers/main.js --watch dist && ./node_modules/pm2/bin/pm2 log",
     "server-start": "./node_modules/pm2/bin/pm2 start ./servers/main.js",
     "server-stop": "./node_modules/pm2/bin/pm2 stop ./servers/main.js",
     "server-nodemon": "nodemon --watch ./dist --ignore ./data servers/main.js"
