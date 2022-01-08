@@ -16,7 +16,7 @@ const dotenv = require('dotenv');
 const express = require('express'); // http://expressjs.com/ko/4x/api.html 가이드 문서 
 const session = require('express-session'); // https://github.com/expressjs/session
 const subdomain = require('express-subdomain'); // https://www.npmjs.com/package/express-subdomain
-const multer = require('multer'); // multipart/form-data, new FormData() 처리를 위한 미들웨어 - https://github.com/expressjs/multer - body parser 기능 포함되어 있음(request.body)
+//const multer = require('multer'); // multipart/form-data, new FormData() 처리를 위한 미들웨어 - https://github.com/expressjs/multer - body parser 기능 포함되어 있음(request.body)
 
 // parser
 const cookieParser = require('cookie-parser');
