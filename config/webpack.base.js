@@ -53,7 +53,7 @@ const fs = require('fs');
 const webpack = require('webpack');
 //const glob = require("glob"); // /**/*.js 형태 사용
 
-const paths = require('./paths');
+const paths = require(path.resolve(__dirname, './paths'));
 const env = require(path.resolve(paths.appPath, 'config/env'));
 
 // webpack plugin 

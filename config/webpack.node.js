@@ -11,7 +11,7 @@ module.exports = {
         nodeExternals()
     ],
     entry: {
-        'utils': '/src/utils/index.js'
+        'node-util': '/src/node/util/index.js'
     },
     output: {
         filename: 'node/[name].js',

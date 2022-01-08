@@ -4,7 +4,7 @@
 const path = require('path'); 
 const fs = require('fs');
 
-const paths = require('./paths');
+const paths = require(path.resolve(__dirname, './paths'));
 const env = require(path.resolve(paths.appPath, 'config/env'));
 
 // 경로 

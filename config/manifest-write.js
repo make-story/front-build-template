@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const mkdir = require('mkdirp'); // 폴더생성 모듈 (하위 폴더까지 생성)
 
-const paths = require('./paths');
+const paths = require(path.resolve(__dirname, './paths'));
 const env = require(path.resolve(paths.appPath, 'config/env'));
 
 // 경로 
