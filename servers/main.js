@@ -9,13 +9,14 @@ const http = require('http');
 const https = require('https'); 
 const cors = require('cors');
 const createError = require('http-errors');
-//const compression = require('compression'); // Gzip
+const compression = require('compression'); // Gzip
 const dotenv = require('dotenv');
 //const morgan = require('morgan');
 //const fetch = require('node-fetch'); // https://github.com/request/request/issues/3143
 const express = require('express'); // http://expressjs.com/ko/4x/api.html 가이드 문서 
 const session = require('express-session'); // https://github.com/expressjs/session
 const subdomain = require('express-subdomain'); // https://www.npmjs.com/package/express-subdomain
+const multer = require('multer'); // multipart/form-data, new FormData() 처리를 위한 미들웨어 - https://github.com/expressjs/multer - body parser 기능 포함되어 있음(request.body)
 
 // parser
 const cookieParser = require('cookie-parser');
@@ -130,6 +131,13 @@ cookie-parser 미들웨어 뒤에 놓는 것이 안전합니다.
 	//store
 }));*/
 
+// log
+//app.use(morgan('dev'));
+
+// Gzip 압축
+app.use(compression()); 
+//app.use(express.compress());
+
 // subdomain
 //app.use(subdomain('kit', (require, response, next) = { }));
 
@@ -155,6 +163,9 @@ app.use((request, response, next) => {
 /*app.get('/readFile', (request, response) => {
 	const fileStream = fs.createReadStream('./bog_file.zip');
 	fileStream.pipe(response);
+});*/
+/*app.post('/files/editor', multer({ dest: __dirname + '/uploads/'}).any(), function(request, response) {
+	const files = request.files;
 });*/
 
 // redirect HTTP to HTTPS 
@@ -203,6 +214,18 @@ app.use(function(error, request, response, next) {
 	response.send('페이지 없음!');
 	//response.render('error');
 });
+
+/**
+ * 서버 콜 test
+ */
+// https://www.npmjs.com/package/node-fetch
+/*async function getRequest() {
+	const url = 'http://makestory.net/media/categories/documents';
+	const response = await fetch(url);
+	const data = await response.json();
+	console.log(data);
+}
+getRequest();*/
 
 /**
  * 서버 실행
