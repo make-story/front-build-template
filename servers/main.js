@@ -233,10 +233,10 @@ getRequest();*/
 /*const server = app.listen(env.port, () => {
 	console.log(`Server ${env.port}`);
 });*/
-//const server = app.listen(env.port, () => console.log(`web server -> http://localhost:${env.port}`)); 
+//const server = app.listen(env.port, () => console.log(`Web Service Server -> http://localhost:${env.port}`)); 
 const server = http.createServer(app);
 server.listen(env.port, () => {
-	console.log('Server', env.port);
+	console.log('Web Service Server', env.port);
 });
 /*if(fs.existsSync(path.resolve(__dirname, '../.key/ssl.json'))) { // HTTPS SSL
 	const ssl = require(path.resolve(__dirname, '../.key/ssl.json'));
