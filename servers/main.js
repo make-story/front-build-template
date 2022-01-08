@@ -3,29 +3,44 @@
  * https://deview.kr/data/deview/session/attach/1600_T1_%EC%86%90%EC%B0%AC%EC%9A%B1_%EC%96%B4%EC%84%9C%EC%99%80_SSR%EC%9D%80_%EC%B2%98%EC%9D%8C%EC%9D%B4%EC%A7%80.pdf
  */
 // https://expressjs.com/ko/api.html
+const fs = require('fs'); 
 const path = require('path');
 const http = require('http');
 const https = require('https'); 
-const createError = require('http-errors');
-const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const express = require('express');
-const session = require('express-session'); // https://github.com/expressjs/session
+const createError = require('http-errors');
+//const compression = require('compression'); // Gzip
 const dotenv = require('dotenv');
+//const morgan = require('morgan');
+//const fetch = require('node-fetch'); // https://github.com/request/request/issues/3143
+const express = require('express'); // http://expressjs.com/ko/4x/api.html 가이드 문서 
+const session = require('express-session'); // https://github.com/expressjs/session
+const subdomain = require('express-subdomain'); // https://www.npmjs.com/package/express-subdomain
 
-// env
-const env = require(path.resolve(__dirname, '../config/env'));
+// parser
+const cookieParser = require('cookie-parser');
+
+// config
 const paths = require(path.resolve(__dirname, '../config/paths'));
+const env = require(path.resolve(__dirname, '../config/env'));
 
-// Exception Handler 등록
+/**
+ * Exception Handler 등록 (http://nodeqa.com/nodejs_ref/1)
+ */
 // UncatchedException 이 발생하면 Node.js 인스턴스가 죽음(서버다운) 방지
 // https://nodejs.org/api/process.html#process_warning_using_uncaughtexception_correctly
 process.on('uncaughtException', (error) => {
 	console.log('Caught exception: ' + error);
 });
 
-// express
-dotenv.config(); // 루트 폴더 '.env' 파일
+/**
+ * ENV 세팅
+ */
+dotenv.config(); // 루트 폴더 '.env' 파일 
+
+/**
+ * express
+ */
 const app = express(); 
 
 // app.set(name, value)
@@ -75,9 +90,17 @@ app.use((request, response, next) => {
 	next();
 });
 */
+app.use(cors()); // cors 관련 정책
 
-// cors 관련 정책
-app.use(cors()); 
+// bodyParser
+// 익스프레스 4.16.0 버전부터 body-parser 미들웨어의 일부 기능이 익스프레스에 내장
+//app.use(bodyParser.urlencoded({extended: false, limit: '200mb'})); // parse application/x-www-form-urlencoded
+//app.use(bodyParser.json({limit: '200mb'})); // parse application/json
+//app.use(bodyParser.raw()); // 요청의 본문이 버퍼 데이터 일 때
+//app.use(bodyParser.text()); // 요청의 본문이 텍스트 데이터 일 때
+// 'Failed to load resource: the server responded with a status of 413 (Payload Too Large)' 에러를 해결하기 위해 limit 값을 설정해준다.
+app.use(express.json({ limit: '200mb' })); // parse application/json
+app.use(express.urlencoded({ extended: false, limit: '200mb' })); // parse application/x-www-form-urlencoded
 
 // 쿠키 / 세션
 const COOKIE_SECRET = 'test';
@@ -107,6 +130,9 @@ cookie-parser 미들웨어 뒤에 놓는 것이 안전합니다.
 	//store
 }));*/
 
+// subdomain
+//app.use(subdomain('kit', (require, response, next) = { }));
+
 // 고정 경로 설정 (JS, CSS, Images, Files 등 폴더 연결)
 // app.use(express.static('../경로'))) 했을 경우, $ yarn server 을 실행시키는 명령은 root 이므로, root 기준 상대경로가 설정됨
 // app.use(express.static(path.resolve(__dirname, '../경로')))
@@ -115,13 +141,14 @@ app.use('/test', express.static(path.resolve(paths.appPath, 'test')));
 app.use(express.static(path.resolve(paths.appPath, 'dist')));
 app.use(express.static(path.resolve(paths.appPath, 'public')));
 
-// bodyParser
-// 익스프레스 4.16.0 버전부터 body-parser 미들웨어의 일부 기능이 익스프레스에 내장
-// 'Failed to load resource: the server responded with a status of 413 (Payload Too Large)' 에러를 해결하기 위해 limit 값을 설정해준다.
-app.use(express.json({ limit: '200mb' })); // parse application/json
-app.use(express.urlencoded({ extended: false, limit: '200mb' })); // parse application/x-www-form-urlencoded
-//app.use(bodyParser.raw()); // 요청의 본문이 버퍼 데이터 일 때
-//app.use(bodyParser.text()); // 요청의 본문이 텍스트 데이터 일 때
+// request 에 값 포함하여 전달
+app.use((request, response, next) => {
+	// 전역 데이터 설정 (사용자 정보 등)
+	//request.passport = passport;
+	//Object.assign(response.locals, 'test');
+	//request.locals.user = request?.user || '';
+	next();
+});
 
 // 스트림
 // 스트림을 이용하면 큰 파일을 읽을 때도 메모리를 효율적으로 사용할 수 있다. (readFile 를 이용할 경우 파일의 전체내용을 메모리로 가져오기 때문에 메모리에 여유가 없다면 부담이 될 수 있다.)
@@ -130,43 +157,32 @@ app.use(express.urlencoded({ extended: false, limit: '200mb' })); // parse appli
 	fileStream.pipe(response);
 });*/
 
-// express 전역변수 설정 (response.locals)
-/*app.use(function(request, response, next) {
-	// 전역 데이터 설정 
-	Object.assign(response.locals, webpack);
-	next();
-});*/
-app.use(function(request, response, next) {
-	// 사용자 정보
-	//console.log(request);
-	//request.locals.user = request?.user || '';
-	next();
-});
-
-// redirect 
+// redirect HTTP to HTTPS 
 /*app.all('*', (request, response, next) => { 
-	// HTTP to HTTPS 
 	let protocol = request.headers['x-forwarded-proto'] || request.protocol; 
 	if(protocol == 'https') { 
 		next(); 
 	}else { 
 		let from = `${protocol}://${request.hostname}${request.url}`; 
 		let to = `https://'${request.hostname}${request.url}`; 
+		// log and redirect 
 		console.log(`[${request.method}]: ${from} -> ${to}`); 
 		response.redirect(to); 
 	} 
 });*/
 
 // routes - app.use('라우트', '하위 라우트')
-app.get('/ysm', (request, response) => {
-	response.end('TEST SERVER');
-});
+// servers 폴더(main.js) -> routes 폴더 -> pages 폴더
+app.use('/ysm', (request, response) => response.end('TEST SERVER'));
 //app.use('/api/summary', require(path.resolve(paths.appPath, 'routes/summary')));
 //app.use('/api/request', require(path.resolve(paths.appPath, 'routes/request')));
 //app.use('/api/timing', require(path.resolve(paths.appPath, 'routes/timing')));
 //app.use('/', require(path.resolve(paths.appPath, 'routes/dashboard')));
-app.use('/', require(path.resolve(paths.appPath, 'routes/test')));
+app.get('/', require(path.resolve(paths.appPath, 'routes/test'))); // HTTP GET 호출에 대한 응답
 
+/**
+ * error handler
+ */
 // catch 404 and forward to error handler
 // https://expressjs.com/ko/guide/error-handling.html
 app.use((request, response, next) => {
@@ -188,16 +204,18 @@ app.use(function(error, request, response, next) {
 	//response.render('error');
 });
 
-// 서버 실행
+/**
+ * 서버 실행
+ */
 /*const server = app.listen(env.port, () => {
 	console.log(`Server ${env.port}`);
 });*/
-//app.listen(env.port, () => console.log(`app is working at http://localhost:${env.port}`));
-const httpServer = http.createServer(app);
-httpServer.listen(env.port, () => {
+//const server = app.listen(env.port, () => console.log(`web server -> http://localhost:${env.port}`)); 
+const server = http.createServer(app);
+server.listen(env.port, () => {
 	console.log('Server', env.port);
 });
-/*if(fs.existsSync(path.resolve(__dirname, '../.key/ssl.json'))) {
+/*if(fs.existsSync(path.resolve(__dirname, '../.key/ssl.json'))) { // HTTPS SSL
 	const ssl = require(path.resolve(__dirname, '../.key/ssl.json'));
 	if(ssl && typeof ssl === 'object' && fs.existsSync(ssl.pathKey) && fs.existsSync(ssl.pathCert)) {
 		const credentials = {
