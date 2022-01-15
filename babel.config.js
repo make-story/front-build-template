@@ -52,6 +52,8 @@
   const plugins = [
     // $ npm install @babel/plugin-proposal-class-properties
     '@babel/plugin-proposal-class-properties',
+    // $ npm install @babel/plugin-proposal-optional-chaining
+    '@babel/plugin-proposal-optional-chaining',
     [
       // $ npm install babel-plugin-module-resolver
 			"module-resolver", {

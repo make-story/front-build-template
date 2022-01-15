@@ -37,7 +37,11 @@ process.on('uncaughtException', (error) => {
 /**
  * ENV 세팅
  */
-dotenv.config(); // 루트 폴더 '.env' 파일 
+// NODE_ENV: development, production
+dotenv.config(); // 루트 폴더에 존재하는 '.env' 파일 읽음
+/*dotenv.config({ 
+    path: path.resolve(__dirname, `../env/.env.${process.env.NODE_ENV || 'local'}`) 
+});*/
 
 /**
  * express
