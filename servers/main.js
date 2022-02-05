@@ -187,6 +187,7 @@ app.use((request, response, next) => {
 });*/
 
 // routes - app.use('라우트', '하위 라우트')
+// app.use 는 지정 경로의 하위 모든 경로 응답 / app.get, app.post, app.put 등은 명확한 특정 경로에 대해서만 응답  
 // servers 폴더(main.js) -> routes 폴더 -> pages 폴더
 app.use('/ysm', (request, response) => response.end('TEST SERVER'));
 //app.use('/api/summary', require(path.resolve(paths.appPath, 'routes/summary')));
