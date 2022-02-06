@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
-const env = require('./env');
+
+const config = require(path.resolve(__dirname, './index'));
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebook/create-react-app/issues/637
@@ -24,10 +25,10 @@ const ensureSlash = (inputPath="", isNeedsSlash=true) => {
 };
 
 // public url
-const getPublicUrl = appPackageJson => env.publicUrl || require(appPackageJson).homepage;
+const getPublicUrl = appPackageJson => process.env.PUBLIC_URL || require(appPackageJson).homepage;
 const getServedPath = appPackageJson => {
 	const publicUrl = getPublicUrl(appPackageJson);
-	const servedUrl = env.publicUrl || (publicUrl ? url.parse(publicUrl).pathname : '/');
+	const servedUrl = process.env.PUBLIC_URL || (publicUrl ? url.parse(publicUrl).pathname : '/');
 	return ensureSlash(servedUrl);
 };
 
@@ -48,7 +49,7 @@ module.exports = {
 	appPath: resolveApp('.'),
 	appConfig: resolveApp('config'),
 	appSrc: resolveApp('src'),
-	appWebpackOutput: ensureSlash(resolveApp(`dist/${env.active}/${env.build}/webpack`)),
+	appWebpackOutput: ensureSlash(resolveApp(`dist/${process.env.ACTIVE}/${process.env.BUILD}/webpack`)),
 	publicUrl: getPublicUrl(resolveApp('package.json')),
 	servedPath: getServedPath(resolveApp('package.json')),
 };

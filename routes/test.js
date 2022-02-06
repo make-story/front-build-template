@@ -2,8 +2,6 @@ const path = require('path');
 const express = require('express');
 const router = express.Router();
 
-// env
-const env = require(path.resolve(__dirname, '../config/env'));
 const paths = require(path.resolve(__dirname, '../config/paths'));
 
 // build manifest

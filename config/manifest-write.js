@@ -6,18 +6,17 @@ const fs = require('fs');
 const mkdir = require('mkdirp'); // 폴더생성 모듈 (하위 폴더까지 생성)
 
 const paths = require(path.resolve(__dirname, './paths'));
-const env = require(path.resolve(paths.appPath, 'config/env'));
 
 // 경로 
 const PATHS = {
-	MANIFEST: path.resolve(__dirname, `../dist/${env.active}/${env.build}/manifest`),
+	MANIFEST: path.resolve(__dirname, `../dist/${process.env.ACTIVE}/${process.env.BUILD}/manifest`),
 };
 
 // 공통 정보
 const SEED = {
 	// 개발환경/빌드정보 
-	'active': env.active,
-	'build': env.build,
+	'active': process.env.ACTIVE,
+	'build': process.env.BUILD,
 	'path': '',
 	// 프론트리소스 정보 
 	// ico, json, css, js 등 파일 
@@ -28,7 +27,7 @@ let setWebpackDistributionManifest = (manifest={}, options={}) => {
 	let {dir, seed} = Object.assign({'dir': PATHS.MANIFEST, 'seed': {}}, options); // 파라미터값 
 
 	// 공통적인 구조로 맞춤 
-	seed = Object.assign(SEED, {'path': `${env.active}/${env.build}/webpack/`}, seed);
+	seed = Object.assign(SEED, {'path': `${process.env.ACTIVE}/${process.env.BUILD}/webpack/`}, seed);
 
 	// 엔트리 포인트 별로 파일을 생성
 	Object.keys(manifest).forEach(entry => {
@@ -66,7 +65,7 @@ let setGulpDistributionManifest = (manifest={}, options={}) => {
 	let {dir, seed, type} = Object.assign({'dir': PATHS.MANIFEST, 'seed': {}, 'type': ''}, options); // 파라미터값 
 
 	// 공통적인 구조로 맞춤
-	seed = Object.assign(SEED, {'path': `${env.active}/${env.build}/gulp/`}, seed);
+	seed = Object.assign(SEED, {'path': `${process.env.ACTIVE}/${process.env.BUILD}/gulp/`}, seed);
 
 	// 엔트리 포인트 별로 파일을 생성
 	Object.keys(manifest).forEach(entry => {

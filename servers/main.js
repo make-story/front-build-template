@@ -23,7 +23,7 @@ const cookieParser = require('cookie-parser');
 
 // config
 const paths = require(path.resolve(__dirname, '../config/paths'));
-const env = require(path.resolve(__dirname, '../config/env'));
+const config = require(path.resolve(__dirname, '../config/index'));
 
 /**
  * Exception Handler 등록 (http://nodeqa.com/nodejs_ref/1)
@@ -33,15 +33,6 @@ const env = require(path.resolve(__dirname, '../config/env'));
 process.on('uncaughtException', (error) => {
 	console.log('Caught exception: ' + error);
 });
-
-/**
- * ENV 세팅
- */
-// NODE_ENV: development, production
-dotenv.config(); // 루트 폴더에 존재하는 '.env' 파일 읽음
-/*dotenv.config({ 
-    path: path.resolve(__dirname, `../env/.env.${process.env.NODE_ENV || 'local'}`) 
-});*/
 
 /**
  * express
@@ -149,9 +140,9 @@ app.use(compression());
 // app.use(express.static('../경로'))) 했을 경우, $ yarn server 을 실행시키는 명령은 root 이므로, root 기준 상대경로가 설정됨
 // app.use(express.static(path.resolve(__dirname, '../경로')))
 // app.use('/dist', express.static(path.resolve(__dirname, '../dist')));
-app.use('/test', express.static(path.resolve(paths.appPath, 'test')));
-app.use(express.static(path.resolve(paths.appPath, 'dist')));
-app.use(express.static(path.resolve(paths.appPath, 'public')));
+app.use('/test', express.static(path.resolve(__dirname, '../test')));
+app.use(express.static(path.resolve(__dirname, '../dist')));
+app.use(express.static(path.resolve(__dirname, '../public')));
 
 // request 에 값 포함하여 전달
 app.use((request, response, next) => {
@@ -190,11 +181,11 @@ app.use((request, response, next) => {
 // app.use 는 지정 경로의 하위 모든 경로 응답 / app.get, app.post, app.put 등은 명확한 특정 경로에 대해서만 응답  
 // servers 폴더(main.js) -> routes 폴더 -> pages 폴더
 app.use('/ysm', (request, response) => response.end('TEST SERVER'));
-//app.use('/api/summary', require(path.resolve(paths.appPath, 'routes/summary')));
-//app.use('/api/request', require(path.resolve(paths.appPath, 'routes/request')));
-//app.use('/api/timing', require(path.resolve(paths.appPath, 'routes/timing')));
-//app.use('/', require(path.resolve(paths.appPath, 'routes/dashboard')));
-app.get('/', require(path.resolve(paths.appPath, 'routes/test'))); // HTTP GET 호출에 대한 응답
+//app.use('/api/summary', require(path.resolve(__dirname, '../routes/summary')));
+//app.use('/api/request', require(path.resolve(__dirname, '../routes/request')));
+//app.use('/api/timing', require(path.resolve(__dirname, '../routes/timing')));
+//app.use('/', require(path.resolve(__dirname, '../routes/dashboard')));
+app.get('/', require(path.resolve(__dirname, '../routes/test'))); // HTTP GET 호출에 대한 응답
 
 /**
  * error handler
@@ -235,13 +226,13 @@ getRequest();*/
 /**
  * 서버 실행
  */
-/*const server = app.listen(env.port, () => {
-	console.log(`Server ${env.port}`);
+/*const server = app.listen(process.env.PORT, () => {
+	console.log(`Server ${process.env.PORT}`);
 });*/
-//const server = app.listen(env.port, () => console.log(`WebService Server`, `http://localhost:${env.port}`)); 
+//const server = app.listen(process.env.PORT, () => console.log(`WebService Server`, `http://localhost:${process.env.PORT}`)); 
 const server = http.createServer(app);
-server.listen(env.port, () => {
-	console.log('WebService Server', env.port);
+server.listen(process.env.PORT, () => {
+	console.log('WebService Server', process.env.PORT);
 });
 /*if(fs.existsSync(path.resolve(__dirname, '../.key/ssl.json'))) { // HTTPS SSL
 	const ssl = require(path.resolve(__dirname, '../.key/ssl.json'));
@@ -251,8 +242,8 @@ server.listen(env.port, () => {
 			cert: fs.readFileSync(ssl.pathCert), // 인증서 파일의 경로
 		};
 		const httpsServer = https.createServer(credentials, app);
-		httpsServer.listen(env.portSSL, () => {
-			console.log('Server SSL', env.portSSL);
+		httpsServer.listen(process.env.PORT_SSL, () => {
+			console.log('Server SSL', process.env.PORT_SSL);
 		});
 	}
 }*/

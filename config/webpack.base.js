@@ -54,14 +54,12 @@ const webpack = require('webpack');
 //const glob = require("glob"); // /**/*.js 형태 사용
 
 const paths = require(path.resolve(__dirname, './paths'));
-const env = require(path.resolve(paths.appPath, 'config/env'));
 
 // webpack plugin 
 //const ESLintPlugin = require('eslint-webpack-plugin'); // 기존 'eslint-loader' 방식 변경
 const CleanWebpackPlugin = require('clean-webpack-plugin'); // 폴더 내부 파일 비우기
 const TerserPlugin = require('terser-webpack-plugin'); // 자바스크립트 코드 압축  (웹팩4+ production 모드는 terser-webpack-plugin를 기본 minimizer로 사용)
 //const DirectoryNamedWebpackPlugin = require("directory-named-webpack-plugin"); // 웹팩 4 전용
-const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // 웹팩4 부터는 extract-text-webpack-plugin 을 CSS에 사용해서는 안됩니다. 대신 mini-css-extract-plugin을 사용
 //const NpmInstallPlugin = require('npm-install-webpack-plugin'); // 개발 중 누락 된 종속성 자동 설치
 //const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
@@ -252,8 +250,8 @@ module.exports = {
 		// 자바스크립트 내부 코드에서 dynamic import 를 사용하는 경우, publicPath 를 활용하여 리소스 url을 지정해 줄 수 있다.
 		// devServer (개발모드)를 사용할 경우(HtmlWebpackPlugin 함께 사용하는 경우) devServer.contentBase 도 함께 변경해줘야 한다. 
 		//publicPath: '/dist/webpack/',
-		//publicPath: `/${env.active}/${env.build}/`,
-		publicPath: `/${env.active}/${env.build}/webpack/`,
+		//publicPath: `/${process.env.ACTIVE}/${process.env.BUILD}/`,
+		publicPath: `/${process.env.ACTIVE}/${process.env.BUILD}/webpack/`,
 
 		// [name]은 entry 에 설정된 ‘key’ 이름 - entry name
 		// [id] 웹팩 내부적으로 사용하는 모듈 ID - chunk id
@@ -337,16 +335,6 @@ module.exports = {
 			{ from: 'source', to: 'dest' },
 			{ from: 'other', to: 'public' },
 		]),*/
-
-		// 번들링한 결과물에서 css파일을 따로 추출
-		new MiniCssExtractPlugin({
-			// 개발모드 
-			//filename: '[name].css',
-			//chunkFilename: '[id].css',
-			// 운영모드
-			filename: '[name]/[name].[hash].css',
-			chunkFilename: '[name]/[id].[hash].css',
-		}),
 
 		// 라이브러리 로딩 (모든 모듈에 자동으로 설정된 import 구문 삽입)
 		// jQuery 를 사용하고 있는 모든 모듈 JS 마다 import $ from 'jquery'; 불러온다면 꽤나 번거로운 일

@@ -7,7 +7,6 @@ const fs = require('fs');
 //const request = require('request'); // http 호출을 할 수있는 가장 간단한 방법 (HTTPS 지원)
 
 const paths = require('./paths');
-const env = require(path.resolve(paths.appPath, 'config/env'));
 const manifestRead = require(path.resolve(paths.appPath, 'config/manifest-read'));
 
 // webpack plugin 
@@ -37,8 +36,8 @@ module.exports = {
 		http://<host 설정주소>:<port 설정포트>/<contentBase 경로입력> (예를 들어, http://0.0.0.0:9000/local/test/webpack/ )으로 접근 한다.
 		*/
 		//contentBase: path.resolve(__dirname, '../public'),
-		//contentBase: `/${env.active}/${env.build}/`, 
-		//contentBase: `/${env.active}/${env.build}/webpack/`, 
+		//contentBase: `/${process.env.ACTIVE}/${process.env.BUILD}/`, 
+		//contentBase: `/${process.env.ACTIVE}/${process.env.BUILD}/webpack/`, 
 
 		// hot: HotModuleReplacementPlugin 을 사용해 HMR 기능을 이용하는 옵션 
 		// 소스가 변경되면 자동으로 빌드되어 반영된다. 파일이 수정될 경우 그 부분에 대해 리로드를 해주는 옵션 

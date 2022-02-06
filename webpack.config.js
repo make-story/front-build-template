@@ -4,8 +4,9 @@ const fs = require('fs');
 const mkdir = require('mkdirp'); // 폴더생성 모듈 (하위 폴더까지 생성)
 const webpackMerge = require('webpack-merge'); // 여러 웹팩 설정값 결합 - webpackMerge({설정1}, {설정2}, ...) - (4.x 와 5.x 이상 버전 사용방법 차이 있음)
 //const { merge } = require('webpack-merge');
+
 const paths = require(path.resolve(__dirname, './config/paths'));
-const env = require(path.resolve(__dirname, './config/env'));
+const config = require(path.resolve(__dirname, './config/index'));
 const manifestWrite = require(path.resolve(__dirname, './config/manifest-write'));
 
 // webpack plugin 
@@ -16,16 +17,16 @@ const CircularDependencyPlugin = require('circular-dependency-plugin'); // 순�
 //const CopyPlugin = require('copy-webpack-plugin'); // 개별 파일 또는 전체 디렉토리를 빌드 디렉토리에 복사
 
 // webpack config (웹팩설정 정보)
-const configBase = require(path.resolve(__dirname, './config/webpack.base.js')); // 기본설정 (기본 프로젝트)
-const configNone = require(path.resolve(__dirname, './config/webpack.none.js')); // 웹팩 개발모드 설정 
-const configDevelopment = require(path.resolve(__dirname, './config/webpack.development.js')); // 웹팩 개발모드 설정 
-const configProduction = require(path.resolve(__dirname, './config/webpack.production.js')); // 웹팩 배포용 설정 
-const configStyle = require(path.resolve(__dirname, './config/webpack.style.js')); // 스타일 관련
-const configTemplate = require(path.resolve(__dirname, "./config/webpack.template.js")); // 템플릿 설정 관련
-const configReact = require(path.resolve(__dirname, './config/webpack.react.js')); // 리액트 프로젝트 
-const configTypeScript = require(path.resolve(__dirname, './config/webpack.typescript.js')); // 타입스크립트 프로젝트 
-const configReactTypeScript = require(path.resolve(__dirname, './config/webpack.react-typescript.js')); // 리액트 + 타입스크립트 프로젝트 
-const configVue = require(path.resolve(__dirname, './config/webpack.vue.js')); // 리액트 프로젝트 
+const webpackConfigBase = require(path.resolve(__dirname, './config/webpack.base.js')); // 기본설정 (기본 프로젝트)
+const webpackConfigNone = require(path.resolve(__dirname, './config/webpack.none.js')); // 웹팩 개발모드 설정 
+const webpackConfigDevelopment = require(path.resolve(__dirname, './config/webpack.development.js')); // 웹팩 개발모드 설정 
+const webpackConfigProduction = require(path.resolve(__dirname, './config/webpack.production.js')); // 웹팩 배포용 설정 
+const webpackConfigStyle = require(path.resolve(__dirname, './config/webpack.style.js')); // 스타일 관련
+const webpackConfigTemplate = require(path.resolve(__dirname, "./config/webpack.template.js")); // 템플릿 설정 관련
+const webpackConfigReact = require(path.resolve(__dirname, './config/webpack.react.js')); // 리액트 프로젝트 
+const webpackConfigTypeScript = require(path.resolve(__dirname, './config/webpack.typescript.js')); // 타입스크립트 프로젝트 
+const webpackConfigReactTypeScript = require(path.resolve(__dirname, './config/webpack.react-typescript.js')); // 리액트 + 타입스크립트 프로젝트 
+const webpackConfigVue = require(path.resolve(__dirname, './config/webpack.vue.js')); // 리액트 프로젝트 
 
 /*
 -
@@ -58,57 +59,57 @@ https://d2.naver.com/helloworld/7975004
 // 경로
 const PATHS = {
 	// 공통경로
-	PUBLIC: `${env.active}/${env.build}/webpack/`,
+	PUBLIC: `${process.env.ACTIVE}/${process.env.BUILD}/webpack/`,
 };
 
 // 개발서버 관련 설정 
-let setDevelopment = (config={}) => {
-	if(config.mode !== 'development') {
-		return config;
+let setDevelopment = (webpackConfig={}) => {
+	if(webpackConfig.mode !== 'development') {
+		return webpackConfig;
 	}
-	if(!config.devServer || typeof config.devServer !== 'object') {
-		config.devServer = {};
+	if(!webpackConfig.devServer || typeof webpackConfig.devServer !== 'object') {
+		webpackConfig.devServer = {};
 	}
-	if(env.active === env.phase.local) {
-		config.devServer.open = true;
+	if(process.env.ACTIVE === config.phase.local) {
+		webpackConfig.devServer.open = true;
 	}else {
-		config.devServer.open = false;
+		webpackConfig.devServer.open = false;
 	}
-	return config;
+	return webpackConfig;
 };
 
 // 개발환경에 따른 output 변경 
-let setOutput = (config={}) => {
-	if(!config.output) {
-		return config;
+let setOutput = (webpackConfig={}) => {
+	if(!webpackConfig.output) {
+		return webpackConfig;
 	}
-	// config.output 값 변경 
-	switch(env.active) {
-		case env.phase.local:
-		case env.phase.test: // dev / qa
-		case env.phase.stage:
-		case env.phase.production:
+	// webpackConfig.output 값 변경 
+	switch(process.env.ACTIVE) {
+		case config.phase.local:
+		case config.phase.development:
+		case config.phase.production:
 		/*case 'prd':
 		case 'stg':
 		case 'qa':
 		case 'dev':*/
 			// 빌드 결과 파일위치 지정 
-			config.output.path = paths.appWebpackOutput;
-			if(/*env.active !== env.phase.local*/config.mode !== 'development') {
+			//webpackConfig.output.path = paths.appWebpackOutput;
+			webpackConfig.output.path = path.resolve(__dirname, `./dist/${process.env.ACTIVE}/${process.env.BUILD}/webpack`);
+			if(/*process.env.ACTIVE !== config.phase.local*/webpackConfig.mode !== 'development') {
 				// 필드파일명 앞에 공통으로 붙이는 경로
-				//config.output.publicPath = PATHS.PUBLIC;
+				//webpackConfig.output.publicPath = PATHS.PUBLIC;
 			}
-			//config.output.filename = `[name]/[name]./${getDatetime()}.js`;
+			//webpackConfig.output.filename = `[name]/[name]./${getDatetime()}.js`;
 			break;
 	}
-	console.log('[webpack] output', config.output && config.output.path || '');
-	return config;
+	console.log('[webpack] output', webpackConfig.output && webpackConfig.output.path || '');
+	return webpackConfig;
 };
 
 // 필수 플러그인 관련 설정 
-let setPlugins = (config={}) => {
-	if(config.mode !== 'production') {
-		return config;
+let setPlugins = (webpackConfig={}) => {
+	if(webpackConfig.mode !== 'production') {
+		return webpackConfig;
 	}
 	const plugins = [];
 
@@ -196,15 +197,15 @@ let setPlugins = (config={}) => {
 		new ManifestPlugin({
 		//new WebpackManifestPlugin({
 			// 파일명 - manifest.json
-			//fileName: `${env.active}.${env.build}.json`, 
+			//fileName: `${process.env.ACTIVE}.${process.env.BUILD}.json`, 
 			// 경로의 기본 경로 (기본값: output.publicPath)
 			//publicPath: '',
 			// 경로에 추가되는 경로
 			//basePath: '/', 
 			// 정보 추가
 			/*seed: { 
-				'active': env.active,
-				'build': env.build,
+				'active': process.env.ACTIVE,
+				'build': process.env.BUILD,
 			},*/
 			// 필터 
 			filter: function(FileDescriptor) {
@@ -287,8 +288,8 @@ let setPlugins = (config={}) => {
 				return {
 					//time: getDatetime(),
 					//seed: seed,
-					active: env.active,
-					build: env.build,
+					active: process.env.ACTIVE,
+					build: process.env.BUILD,
 					path: PATHS.PUBLIC,
 					entry: entrypointTypes,
 					file: manifestFiles,
@@ -307,9 +308,9 @@ let setPlugins = (config={}) => {
 		})
 	);
 
-	config = webpackMerge(config, { plugins, });
-	//config = merge(config, { plugins, });
-	return config;
+	webpackConfig = webpackMerge(webpackConfig, { plugins, });
+	//webpackConfig = merge(webpackConfig, { plugins, });
+	return webpackConfig;
 };
 
 // node 설정
@@ -334,7 +335,7 @@ process.noDeprecation = true; // 콘설에 다음과 같은 형태의 경고 'pa
 module.exports = (environment, argv) => {
 	let mode;
 	let project;
-	let config = {}; // webpack config (json)
+	let webpackConfig = {}; // webpack config (json)
 
 	console.log('---------- ---------- webpack config start ---------- ----------');
 	/*
@@ -346,30 +347,30 @@ module.exports = (environment, argv) => {
 	// webpack cli
 	//console.log('[webpack] webpack environment-variables', environment); // cli 환경옵션, https://webpack.js.org/api/cli/#environment-options, https://webpack.js.org/guides/environment-variables/
 	//console.log('[webpack] webpack argv', argv); // cli 그 밖의 옵션, https://webpack.js.org/api/cli/#config-options
-	env.buildConsoleLog();
+	config.BUILDConsoleLog();
 
 	// argv
 	// --multiple
 	argv = argv && typeof argv === 'object' ? argv : {};
 	mode = argv.mode || 'production';
-	project = env.project || argv.project;
+	project = process.env.PROJECT || argv.project;
 
 	// 웹팩 기본 설정 mode: 'none' | 'development' | 'production'
 	console.log('[webpack] mode', mode);
-	config = webpackMerge(config, configBase, configStyle);
+	webpackConfig = webpackMerge(webpackConfig, webpackConfigBase, webpackConfigStyle);
 	switch(mode) {
 		case 'none':
-			config = webpackMerge(config, configNone); 
+			webpackConfig = webpackMerge(webpackConfig, webpackConfigNone); 
 			break;
 		case 'development':
-			config = webpackMerge(config, configDevelopment); 
-			//config = merge(configBase, configDevelopment); 
-			//config = Object.assign({}, configBase, configDevelopment); // 배열의 경우 merge 가 아닌, assign 마지막 파라미터 값으로 덮어쓰는(기존값 지우고 마지막 값 적용) 형태
+			webpackConfig = webpackMerge(webpackConfig, webpackConfigDevelopment); 
+			//webpackConfig = merge(webpackConfigBase, webpackConfigDevelopment); 
+			//webpackConfig = Object.assign({}, webpackConfigBase, webpackConfigDevelopment); // 배열의 경우 merge 가 아닌, assign 마지막 파라미터 값으로 덮어쓰는(기존값 지우고 마지막 값 적용) 형태
 			break;
 		case 'production':
-			config = webpackMerge(config, configProduction);
-			//config = merge(configBase, configProduction); 
-			//config = Object.assign({}, configBase, configProduction);
+			webpackConfig = webpackMerge(webpackConfig, webpackConfigProduction);
+			//webpackConfig = merge(webpackConfigBase, webpackConfigProduction); 
+			//webpackConfig = Object.assign({}, webpackConfigBase, webpackConfigProduction);
 			break;
 	}
 
@@ -377,43 +378,43 @@ module.exports = (environment, argv) => {
 	console.log('[webpack] project', project);
 	switch(project) {
 		case 'react':
-			config = webpackMerge(config, configReact); 
-			//config = Object.assign({}, config, configReact);
+			webpackConfig = webpackMerge(webpackConfig, webpackConfigReact); 
+			//webpackConfig = Object.assign({}, webpackConfig, webpackConfigReact);
 			break;
 		case 'typescript':
-			config = webpackMerge(config, configTypeScript); 
-			//config = Object.assign({}, config, configTypeScript);
+			webpackConfig = webpackMerge(webpackConfig, webpackConfigTypeScript); 
+			//webpackConfig = Object.assign({}, webpackConfig, webpackConfigTypeScript);
 			break;
 		case 'react-typescript':
-			config = webpackMerge(config, configReactTypeScript); 
+			webpackConfig = webpackMerge(webpackConfig, webpackConfigReactTypeScript); 
 			break;
 		case 'vue':
-			config = webpackMerge(config, configVue);
-			//config = merge(config, configVue);
+			webpackConfig = webpackMerge(webpackConfig, webpackConfigVue);
+			//webpackConfig = merge(webpackConfig, webpackConfigVue);
 			break;
 		case 'ec':
 			// 웹팩 여러개 실행 
 			// (주의! output.filename [hash] 등이 설정된 경우, 각 output 별로 파일명이 다르다.)
 			// Exporting multiple configurations 
 			// https://webpack.js.org/configuration/configuration-types/#exporting-multiple-configurations
-			//config = [Object.assign({}, config), configEC];
-			//config = configEC;
+			//webpackConfig = [Object.assign({}, webpackConfig), webpackConfigEC];
+			//webpackConfig = webpackConfigEC;
 			break;
 		case 'template':
-			config = webpackMerge(configNone, configTemplate); 
-			//config = Object.assign({}, config, configTypeScript);
+			webpackConfig = webpackMerge(webpackConfigNone, webpackConfigTemplate); 
+			//webpackConfig = Object.assign({}, webpackConfig, webpackConfigTypeScript);
 			break;
 	}
 
 	// config 설정 강제변경/주입(공통설정) - output 경로 등
-	config = (Array.isArray(config) ? config/*웹팩 설정을 여러개 실행할 경우*/ : [config]).map((config, index, array) => {
-		config = setDevelopment(config);
-		config = setOutput(config);
-		config = setPlugins(config);
-		return config;
+	webpackConfig = (Array.isArray(webpackConfig) ? webpackConfig/*웹팩 설정을 여러개 실행할 경우*/ : [webpackConfig]).map((webpackConfig, index, array) => {
+		webpackConfig = setDevelopment(webpackConfig);
+		webpackConfig = setOutput(webpackConfig);
+		webpackConfig = setPlugins(webpackConfig);
+		return webpackConfig;
 	});
 
-	//console.log('config', config);
+	//console.log('webpackConfig', webpackConfig);
 	console.log('---------- ---------- webpack config end ---------- ----------');
-	return config;
+	return webpackConfig;
 };

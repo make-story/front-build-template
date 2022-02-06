@@ -5,7 +5,6 @@ const path = require('path');
 const fs = require('fs');
 
 const paths = require(path.resolve(__dirname, './paths'));
-const env = require(path.resolve(paths.appPath, 'config/env'));
 const manifestRead = require(path.resolve(paths.appPath, 'config/manifest-read'));
 
 // link rel="stylesheet" 태그 생성
