@@ -14,7 +14,7 @@ const getTagCSS = manifest => {
 		return '';
 	}
 	manifest.css.forEach(function(src) {
-		arr.push(`<link rel="stylesheet" href="${manifest.path}${src}"></link>`);
+		arr.push(`<link rel="stylesheet" href="/${manifest.path}${src}"></link>`);
 	});
 	return arr.join('');
 };
