@@ -31,10 +31,9 @@ module.exports = {
 		port: 9000, // 주의! 기본값 8080 은 톰캣과 충돌!
 		
 		// 정적파일을 제공할 경로 (기본값은 output.path)
-		/*
-		output.publicPath 가 설정되어 있을 경우, contentBase 값을 설정해줘야 한다.
-		http://<host 설정주소>:<port 설정포트>/<contentBase 경로입력> (예를 들어, http://0.0.0.0:9000/local/test/webpack/ )으로 접근 한다.
-		*/
+		// output.publicPath 설정된 값 확인 후, contentBase 값 설정
+		// http://<host 설정주소>:<port 설정포트>/<contentBase 경로입력> (예를 들어, http://0.0.0.0:9000/local/test/webpack/ )으로 접근 한다.
+		contentBase: path.resolve(__dirname, `../`),
 		//contentBase: path.resolve(__dirname, '../public'),
 		//contentBase: `/${process.env.ACTIVE}/${process.env.BUILD}/`, 
 		//contentBase: `/${process.env.ACTIVE}/${process.env.BUILD}/webpack/`, 
