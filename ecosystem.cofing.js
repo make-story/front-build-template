@@ -11,11 +11,11 @@ module.exports = {
             exec_mode: "cluster",
             instances: 3,
             env: {
-                "NODE_ENV": "production"
+                NODE_ENV: "production",
             },
             env_development: {
-                "NODE_ENV": "development"
-            }
-        }
-    ]
-};
+                NODE_ENV: "development",
+            },
+        },
+    ],
+}
