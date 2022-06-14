@@ -1,6 +1,6 @@
-# Front 작업 환경  
-### `Typescript`, `React`, `Vue`, `Jenkins Build/Restart` 대응
-### ESLint (문법 검사 도구), Prettier (코드 스타일 자동 정리 도구)
+# 프론트 빌드 템플릿
+## `React`, `Vue`, `Typescript`, `Jenkins Build/Restart` 대응
+## ESLint (문법 검사 도구), Prettier (코드 스타일 자동 정리 도구)
 
 > Create App - 프론트엔드 빌드 설정 생성기  
 https://createapp.dev/  
