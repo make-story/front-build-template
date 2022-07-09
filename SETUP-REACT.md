@@ -204,3 +204,12 @@ module.exports = {
   ],
 }
 ```
+
+7. package.json 
+```
+"scripts": {
+  "dev": "webpack serve",
+  "build": "webpack",
+  ...
+}
+```
