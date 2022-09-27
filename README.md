@@ -75,7 +75,20 @@ $ yarn add babel-loader @babel/preset-env @babel/preset-typescript @babel/preset
 $ yarn add @types/react @types/react-dom 
 ```
 
-### .babelrc 또는 webpack.config.js 설정   
+## babel
+```
+yarn add @babel/core @babel/preset-env @babel/preset-react @babel/preset-typescript
+```
+@babel/preset-env : ES5+ 를 변환할 때 사용한다.  
+@babel/preset-react : React 를 변환할 때 사용한다.  
+@babel/preset-typescript : Typescript 를 변환할 때 사용한다.  
+@babel/runtime  
+@babel/plugin-transform-runtime   
+
+> Babel 7.4.0부터 @babel/polyfill은 deprecated 되었다.  
+https://poiemaweb.com/babel-polyfill  
+
+### .babelrc 
 (webpack 에 babel presets 설정이 있고, .babelrc 파일에도 presets 설정이 있다면, .babelrc 파일이 우선순위를 가짐)
 ```json
 {
@@ -86,6 +99,9 @@ $ yarn add @types/react @types/react-dom
 	]
 }
 ```
+
+## webpack.config.js 
+
 ```javascript
 module.exports = {
 	// ...
@@ -130,7 +146,20 @@ module.exports = {
 };
 ```
 
-### tsconfig.json 설정 
+## typescript
+> tsc 명령 전역 실행
+```
+$ yarn global add typescript@4.1.3
+$ tsc
+```
+
+> tsc 명령 지역 실행
+```
+$ yarn global typescript@4.1.3
+$ ./node_modules/.bin/tsc
+```
+
+> tsconfig.json 설정 
 ```json
 {
   "compilerOptions": {
