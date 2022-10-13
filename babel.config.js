@@ -72,3 +72,21 @@
     babelrcRoots
   };
 }
+
+/*
+// require.resolve 함수는 모듈 내부의 파일경로를 입력받아 해당 파일을 가져오는 함수 입니다.
+// require는 모듈 자체를 가져온다면 요거는 필요한 파일만 가져오는 것
+module.exports = {
+  presets: [
+    require.resolve('@babel/preset-env'),
+    require.resolve('@babel/preset-typescript'),
+    [require.resolve('@babel/preset-react'), { runtime: 'automatic' }],
+  ],
+  plugins: [
+    [require.resolve('@babel/plugin-proposal-class-properties'), { loose: true }],
+    [require.resolve('@babel/plugin-proposal-private-methods'), { loose: true }],
+    [require.resolve('@babel/plugin-proposal-private-property-in-object'), { loose: true }],
+    require.resolve('@babel/plugin-proposal-numeric-separator'),
+  ],
+};
+*/
