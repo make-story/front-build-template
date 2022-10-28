@@ -5,6 +5,9 @@
 > Create App - 프론트엔드 빌드 설정 생성기  
 https://createapp.dev/  
 
+> Next.js 개발환경 빌드 템플릿
+https://github.com/make-story/front-next-build-template  
+
 -----
 
 > 프론트 리소스 빌드과정  
